@@ -1,0 +1,121 @@
+﻿@page "/employees"
+
+<PageTitle>Employees</PageTitle>
+
+<div class="header">
+    <button name="submit" type="submit" class="add-button" @onclick="ShowCreateForm">Add a New Employee</button>
+
+    <div class="search-bar">
+        <input type="text" placeholder="Search by name..." @oninput="(e) => FilterEmployees(e.Value!.ToString()!)">
+    </div>
+
+    <div class="filter-options">
+        <select @onchange="(e) => FilterByDepartment(e.Value!.ToString()!)">
+            <option value="">All Departments</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Accounting">Accounting</option>
+            <option value="Product Management">Product Management</option>
+            <option value="Services">Services</option>
+            <option value="Human Resources">Human Resources</option>
+            <option value="Legal">Legal</option>
+            <option value="Research and Development">Research and Development</option>
+            <option value="Training">Training</option>
+            <option value="Support">Support</option>
+        </select>
+
+        <select @onchange="(e) => FilterByGender(e.Value!.ToString()!)">
+            <option value="">All Genders</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    </div>
+</div>
+
+<div class="main">
+    @if (ShowCreate)
+    {
+        <div class="form-row">
+            <label for="FirstName">First Name</label>
+            <input id="FirstName" name="FirstName" type="text" @bind="@NewEmployee!.FirstName">
+        </div>
+        <div class="form-row">
+            <label for="LastName">Last Name</label>
+            <input id="LastName" name="LastName" type="text" @bind="@NewEmployee.LastName">
+        </div>
+        <div class="form-row">
+            <label for="Email">Email Address</label>
+            <input id="Email" name="Email" type="text" @bind="@NewEmployee.Email">
+        </div>
+        <div class="form-row">
+            <label for="Gender">Gender</label>
+            <input id="Gender" name="Gender" type="text" @bind="@NewEmployee.Gender">
+        </div>
+        <div class="form-row">
+            <label for="Department">Department</label>
+            <input id="Department" name="Department" type="text" @bind="@NewEmployee.Department">
+        </div>
+        <div class="form-row">
+            <label for="Salary">Salary</label>
+            <input id="Salary" name="Salary" type="text" @bind="@NewEmployee.Salary">
+        </div>
+        <div class="form-row">
+            <button name="submit" type="submit" class="submit-button" @onclick="CreateNewEmployeeAsync">Submit</button>
+        </div>
+    }
+    else
+    {
+        if (FilteredEmployees.Count > 0)
+        {
+            <div class="employee-table">
+                <div class="employee-table-header">
+                    <span class="employee-header-item">Name</span>
+                    <span class="employee-header-item">Email</span>
+                    <span class="employee-header-item">Department</span>
+                    <span class="employee-header-item">Gender</span>
+                    <span class="employee-header-item">Salary</span>
+                    <span class="employee-header-item">Actions</span>
+                </div>
+
+                @foreach (var employee in FilteredEmployees)
+                {
+                    @if (ShowEdit && EditingId == employee.Id)
+                    {
+                        <div class="employee-row edit-row">
+                            <!-- Input fields aligned with the columns -->
+                            <input class="employee-item edit-input" type="text" @bind="@EmployeeToUpdate!.FirstName" placeholder="First Name"/>
+                            <input class="employee-item edit-input" type="text" @bind="@EmployeeToUpdate.LastName" placeholder="Last Name"/>
+                            <input class="employee-item edit-input" type="email" @bind="@EmployeeToUpdate.Email" placeholder="Email"/>
+                            <input class="employee-item edit-input" type="text" @bind="@EmployeeToUpdate.Department" placeholder="Department"/>
+                            <input class="employee-item edit-input" type="text" @bind="@EmployeeToUpdate.Gender" placeholder="Gender"/>
+                            <input class="employee-item edit-input" type="text" @bind="@EmployeeToUpdate.Salary" placeholder="Salary"/>
+
+                            <div class="employee-actions">
+                                <!-- Centered buttons with better styling -->
+                                <button class="save-button" @onclick="UpdateEmployeeAsync">Save</button>
+                                <button class="cancel-button" @onclick="CancelEdit">Cancel</button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="employee-row">
+                            <span class="employee-item">@employee.FirstName @employee.LastName</span>
+                            <span class="employee-item">@employee.Email</span>
+                            <span class="employee-item">@employee.Department</span>
+                            <span class="employee-item">@employee.Gender</span>
+                            <span class="employee-item">@employee.Salary</span>
+                            <div class="employee-actions">
+                                <button class="edit-button" @onclick="() => ShowEditFormAsync(employee)">Edit</button>
+                                <button class="delete-button" @onclick="() => DeleteEmployeeAsync(employee)">Delete</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <p>No employees found.</p>
+        }
+    }
+</div>

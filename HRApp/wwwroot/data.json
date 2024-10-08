@@ -1,0 +1,17 @@
+{
+  "departments": [
+    "Engineering",
+    "Accounting",
+    "Product Management",
+    "Services",
+    "Human Resources",
+    "Legal",
+    "Research and Development",
+    "Training",
+    "Support"
+  ],
+  "genders": [
+    "Male",
+    "Female"
+  ]
+}

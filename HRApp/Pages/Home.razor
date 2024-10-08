@@ -1,0 +1,24 @@
+@page "/"
+<PageTitle>Home</PageTitle>
+
+<h1>Employee Analytics Dashboard</h1>
+
+<div class="analytics-container">
+    <div class="stat-card">
+        <h3>Total Employees</h3>
+        <p>@TotalEmployees</p>
+    </div>
+    <div class="stat-card">
+        <h3>Total Male Employees</h3>
+        <p>@TotalMaleEmployees</p>
+    </div>
+    <div class="stat-card">
+        <h3>Total Female Employees</h3>
+        <p>@TotalFemaleEmployees</p>
+    </div>
+
+    <div class="chart-container">
+        <h2>Employees by Department</h2>
+        <canvas id="departmentChart"></canvas>
+    </div>
+</div>
