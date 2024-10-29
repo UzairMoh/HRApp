@@ -1,241 +1,212 @@
-/* Global Styling */
+/* Global styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4; /* Light grey background */
-    color: #333; /* Dark grey text for good readability */
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
 }
 
-button {
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* Layout containers */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
 }
 
-input, button {
-    font-size: 16px;
-    border-radius: 4px; /* Softer rounded corners */
-}
-
-/* Header Section */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0;
-    padding: 10px 20px;
-    background-color: #fff;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for subtle depth */
-}
-
-.add-button {
-    background-color: #6c757d; /* Neutral grey for primary actions */
-    color: white;
-    padding: 10px 20px;
-    font-weight: bold;
-}
-
-.add-button:hover {
-    background-color: #5a6268; /* Slightly darker grey on hover */
-}
-
-.search-bar input {
-    padding: 10px;
-    width: 250px;
-    background-color: #e9ecef; /* Light grey for input fields */
-    border: 1px solid #ced4da;
-    transition: border-color 0.3s ease;
-}
-
-.search-bar input:focus {
-    border-color: #495057;
-    outline: none;
-}
-
-/* Main Section */
-.main {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Form Styles */
-.form-row {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-}
-
-.form-row label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #495057; /* Dark grey for label text */
-}
-
-.form-row input {
-    padding: 10px;
-    background-color: #e9ecef;
-    border-radius: 6px;
-    border: 1px solid #ced4da;
-    transition: border-color 0.3s ease;
-}
-
-.form-row input:focus {
-    border-color: #495057;
-    outline: none;
-}
-
-/* Submit Button */
-.submit-button {
-    background-color: #343a40; /* Darker grey for submit button */
-    color: white;
-    padding: 10px 20px;
-    font-weight: bold;
-}
-
-.submit-button:hover {
-    background-color: #23272b; /* Darker on hover */
-}
-
-/* Employee Table */
-.employee-table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse; /* No gaps between table cells */
-}
-
-.employee-table-header, .employee-row {
+/* Header section */
+.dashboard-header {
     display: grid;
-    grid-template-columns: repeat(6, 1fr); /* Grid for table layout */
-    padding: 15px;
-    border-bottom: 1px solid #dee2e6;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
     align-items: center;
-    background-color: #f8f9fa; /* Light grey for table rows */
+    background-color: #242424;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
 }
 
-.employee-header-item, .employee-item {
-    padding: 10px;
-    text-align: left;
-    color: #343a40; /* Darker text color for better readability */
-}
-
-/* Alternate Row Background */
-.employee-row:nth-child(odd) {
-    background-color: #e9ecef; /* Slightly different grey for odd rows */
-}
-
-.employee-row:hover {
-    background-color: #dee2e6; /* Highlighted grey on hover */
-}
-
-/* Action Buttons */
-.employee-actions {
+/* Search and filter section */
+.search-container {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    gap: 1rem;
+    align-items: center;
 }
 
-.edit-button, .delete-button, .save-button, .cancel-button {
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+.search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background-color: #2d2d2d;
+    border: 1px solid #333333;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 0.95rem;
 }
 
-.edit-button {
-    background-color: #6c757d;
-    color: white;
+.filter-group {
+    display: flex;
+    gap: 1rem;
 }
 
-.edit-button:hover {
-    background-color: #5a6268;
+.filter-select {
+    padding: 0.75rem 1rem;
+    background-color: #2d2d2d;
+    border: 1px solid #333333;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    min-width: 180px;
 }
 
-.delete-button {
-    background-color: #dc3545; /* Red for delete action */
-    color: white;
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 0.95rem;
 }
 
-.delete-button:hover {
-    background-color: #c82333;
+.btn-primary {
+    background-color: #404040;
+    color: #ffffff;
 }
 
-.save-button {
-    background-color: #28a745; /* Green for save action */
-    color: white;
+.btn-primary:hover {
+    background-color: #4a4a4a;
 }
 
-.save-button:hover {
-    background-color: #218838;
+.btn-success {
+    background-color: #2ecc71;
+    color: #ffffff;
 }
 
-.cancel-button {
-    background-color: #6c757d; /* Neutral grey for cancel action */
-    color: white;
+.btn-danger {
+    background-color: #e74c3c;
+    color: #ffffff;
 }
 
-.cancel-button:hover {
-    background-color: #5a6268;
+.btn-warning {
+    background-color: #f39c12;
+    color: #ffffff;
 }
 
-/* Styling for employee row inputs */
+/* Employee form */
+.employee-form {
+    background-color: #242424;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #b3b3b3;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #2d2d2d;
+    border: 1px solid #333333;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+
+/* Employee table */
+.employee-grid {
+    background-color: #242424;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.grid-header {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background-color: #2d2d2d;
+    font-weight: 600;
+    color: #b3b3b3;
+}
+
+.grid-row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #333333;
+    align-items: center;
+}
+
+.grid-row:last-child {
+    border-bottom: none;
+}
+
+.grid-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #ffffff;
+}
+
+.action-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Edit mode */
 .edit-row {
-    grid-template-columns: repeat(6, 1fr); /* Match grid layout */
-    padding: 10px;
-    background-color: #f9f9f9; /* Slightly lighter grey for editing rows */
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
+    background-color: #2d2d2d;
 }
 
 .edit-input {
-    padding: 8px;
-    border: 1px solid #ccc;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #1a1a1a;
+    border: 1px solid #333333;
     border-radius: 4px;
-    text-align: left;
-    background-color: #e9ecef;
+    color: #ffffff;
 }
 
-/* Filter Options Styling */
-.filter-options {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.filter-options select {
-    padding: 10px;
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #b3b3b3;
+    background-color: #242424;
     border-radius: 8px;
-    border: 1px solid #ced4da;
-    background-color: #ffffff;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
 }
 
-.filter-options select:focus {
-    border-color: #007bff;
-    outline: none;
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .dashboard-header {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-group {
+        flex-wrap: wrap;
+    }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
-    .employee-table-header, .employee-row {
-        grid-template-columns: repeat(3, 1fr); /* Adjust grid for smaller screens */
+    .grid-header, .grid-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
     }
 
-    .employee-header-item, .employee-item {
-        text-align: center;
+    .grid-cell {
+        padding: 0.25rem 0;
     }
 
-    .employee-actions {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .add-button, .submit-button, .search-bar input {
-        width: 100%;
-        box-sizing: border-box;
+    .action-group {
+        justify-content: flex-start;
     }
 }
