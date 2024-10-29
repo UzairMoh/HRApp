@@ -17,13 +17,20 @@
             </NavLink>
             <AuthorizeView>
                 <Authorized>
-                    <NavLink class="nav-link" href="/employees" Match="NavLinkMatch.All">
-                        <span class="oi oi-people" aria-hidden="true"></span> Employees
+                    <NavLink class="nav-link" href="/profile" Match="NavLinkMatch.All">
+                        <span class="oi oi-person" aria-hidden="true"></span> Profile
                     </NavLink>
                 </Authorized>
             </AuthorizeView>
-            @if (isAuthenticated)
+            @if (_loggedIn) 
             {
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink class="nav-link" href="/employees" Match="NavLinkMatch.All">
+                            <span class="oi oi-people" aria-hidden="true"></span> Employees
+                        </NavLink>
+                    </Authorized>
+                </AuthorizeView>
                 <NavLink class="nav-link" href="/logout" Match="NavLinkMatch.All">
                     <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
                 </NavLink>
@@ -39,19 +46,19 @@
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
-    private bool isAuthenticated;
+    private bool _collapseNavMenu = true;
+    private bool _loggedIn;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+        _loggedIn = authState.User.Identity?.IsAuthenticated ?? false;
     }
 
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        _collapseNavMenu = !_collapseNavMenu;
     }
 }

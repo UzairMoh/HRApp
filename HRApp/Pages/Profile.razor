@@ -5,55 +5,19 @@
 
 <PageTitle>Profile</PageTitle>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <h2>Profile</h2>
-
-            <div class="col-md-2">
-                <img src="@Picture"
-                     alt="" class="img-rounded img-responsive" />
+<div class="wrapper">
+    <div class="profile-container">
+        <div class="profile-header">
+            <h2>User Profile</h2>
+        </div>
+        <div class="profile-content">
+            <div class="profile-picture">
+                <img src="@Picture" alt="Profile Picture" />
             </div>
-            <div class="col-md-4">
+            <div class="profile-details">
                 <h3>@Username</h3>
-                <p>
-                    <i class="bi bi-envelope"></i> @EmailAddress
-                </p>
-                <p>
-                    <strong>Id Token</strong>: @IdToken
-                </p>
+                <p class="email"><i class="bi bi-envelope"></i> @EmailAddress</p>
             </div>
         </div>
     </div>
 </div>
-
-@code {
-
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    private string Username = "";
-    private string EmailAddress = "";
-    private string Picture = "";
-    private string IdToken = "";
-
-    protected override async Task OnInitializedAsync()
-    {
-        var state = await AuthenticationStateTask;
-
-        Username = state.User.Identity.Name ?? string.Empty;
-        EmailAddress = state.User.Claims
-            .Where(c => c.Type.Equals(System.Security.Claims.ClaimTypes.Email))
-            .Select(c => c.Value)
-            .FirstOrDefault() ?? string.Empty;
-
-        Picture = state.User.Claims
-            .Where(c => c.Type.Equals("picture"))
-            .Select(c => c.Value)
-            .FirstOrDefault() ?? string.Empty;
-
-
-        IdToken = tokenProvider.IdToken;
-
-        await base.OnInitializedAsync();
-    }
-}
