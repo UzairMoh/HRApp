@@ -4,6 +4,7 @@ using HRApp.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HRApp.Models;
 
 namespace HRApp.Pages
 {
@@ -14,6 +15,9 @@ namespace HRApp.Pages
 
         [Inject]
         public IJSRuntime JSRuntime { get; set; } = null!;
+        
+        [Inject]
+        public TokenProvider TokenProvider { get; set; } = null!;
 
         private int TotalEmployees { get; set; }
         private int TotalMaleEmployees { get; set; }
@@ -21,6 +25,8 @@ namespace HRApp.Pages
         private Dictionary<string, int> EmployeesByDepartment { get; set; } = new Dictionary<string, int>();
 
         private bool _isChartLoaded;
+        
+        private string IdToken = "";
 
         protected override async Task OnInitializedAsync()
         {
@@ -32,6 +38,10 @@ namespace HRApp.Pages
             EmployeesByDepartment = employees
                 .GroupBy(e => e.Department)
                 .ToDictionary(g => g.Key, g => g.Count());
+            
+            IdToken = TokenProvider.IdToken;
+
+            await base.OnInitializedAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

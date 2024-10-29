@@ -1,10 +1,9 @@
+using Auth0.AspNetCore.Authentication;
 using HRApp.Data;
+using HRApp.Models;
 using HRApp.Repositories;
 using HRApp.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +19,15 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 // Register the IEmployeeService
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+builder.Services.AddScoped<TokenProvider>();
+
+builder.Services.AddAuth0WebAppAuthentication(options =>
+{
+    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.ClientId = builder.Configuration["Auth0:ClientId"];
+    options.Scope = "openid profile email";
+});
 
 var app = builder.Build();
 
@@ -43,6 +51,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
