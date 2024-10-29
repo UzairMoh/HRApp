@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">HRApp</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -13,23 +15,40 @@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
-            <NavLink class="nav-link" href="/employees" Match="NavLinkMatch.All">
-                <span class="oi oi-people" aria-hidden="true"></span> Employees
-            </NavLink>
-            <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">
-                <span class="oi oi-account-login" aria-hidden="true"></span> Login
-            </NavLink>
-            <NavLink class="nav-link" href="/logout" Match="NavLinkMatch.All">
-                <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
-            </NavLink>
-        </div>        
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="nav-link" href="/employees" Match="NavLinkMatch.All">
+                        <span class="oi oi-people" aria-hidden="true"></span> Employees
+                    </NavLink>
+                </Authorized>
+            </AuthorizeView>
+            @if (isAuthenticated)
+            {
+                <NavLink class="nav-link" href="/logout" Match="NavLinkMatch.All">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
+                </NavLink>
+            }
+            else
+            {
+                <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                </NavLink>
+            }
+        </div>
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
+    private bool isAuthenticated;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+    }
 
     private void ToggleNavMenu()
     {
