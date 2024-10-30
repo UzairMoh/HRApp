@@ -19,7 +19,7 @@ namespace HRApp.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            var state = await AuthenticationStateTask;
+            var state = await AuthenticationStateTask!;
             var email = state.User.Claims
                 .Where(c => c.Type.Equals(System.Security.Claims.ClaimTypes.Email))
                 .Select(c => c.Value)
