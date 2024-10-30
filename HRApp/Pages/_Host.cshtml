@@ -4,6 +4,7 @@
 @using HRApp.Models
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radzen.Blazor
 @{
     Layout = "_Layout";
 
@@ -16,3 +17,4 @@
 }
 
 <component param-InitialState="tokens" type="typeof(App)" render-mode="ServerPrerendered"/>
+<component type="typeof(RadzenTheme)" render-mode="ServerPrerendered" param-Theme="@("material")" />

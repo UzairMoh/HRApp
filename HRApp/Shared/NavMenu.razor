@@ -22,6 +22,13 @@
                     </NavLink>
                 </Authorized>
             </AuthorizeView>
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="nav-link" href="/calendar" Match="NavLinkMatch.All">
+                        <span class="oi oi-calendar" aria-hidden="true"></span> Calendar
+                    </NavLink>
+                </Authorized>
+            </AuthorizeView>
             @if (_loggedIn) 
             {
                 <AuthorizeView>

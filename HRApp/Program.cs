@@ -4,6 +4,7 @@ using HRApp.Models;
 using HRApp.Repositories;
 using HRApp.Services;
 using Microsoft.EntityFrameworkCore;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 builder.Services.AddScoped<TokenProvider>();
+
+builder.Services.AddRadzenComponents();
 
 builder.Services.AddAuth0WebAppAuthentication(options =>
 {
