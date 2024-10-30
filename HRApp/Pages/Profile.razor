@@ -1,59 +1,43 @@
 @page "/Profile"
-@using HRApp.Models
-@inject TokenProvider tokenProvider
 @attribute [Authorize]
 
 <PageTitle>Profile</PageTitle>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <h2>Profile</h2>
-
-            <div class="col-md-2">
-                <img src="@Picture"
-                     alt="" class="img-rounded img-responsive" />
+<div class="dashboard-wrapper">
+    <div class="profile-dashboard">
+        <div class="profile-header">
+            <h2>User Profile</h2>
+        </div>
+        
+        <div class="profile-grid">
+            <div class="profile-main">
+                <div class="profile-card">
+                    <div class="profile-picture">
+                        <img src="@_picture" alt="Profile Picture" />
+                    </div>
+                    <div class="profile-info">
+                        <h3>@UserProfile?.FirstName @UserProfile?.LastName</h3>
+                        <p class="text-secondary">@UserProfile?.Email</p>
+                        <p class="text-secondary">@UserProfile?.Gender</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <h3>@Username</h3>
-                <p>
-                    <i class="bi bi-envelope"></i> @EmailAddress
-                </p>
-                <p>
-                    <strong>Id Token</strong>: @IdToken
-                </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <span class="stat-label">Department</span>
+                        <span class="stat-value">@UserProfile?.Department</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <span class="stat-label">Salary</span>
+                        <span class="stat-value">@UserProfile?.Salary</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-@code {
-
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    private string Username = "";
-    private string EmailAddress = "";
-    private string Picture = "";
-    private string IdToken = "";
-
-    protected override async Task OnInitializedAsync()
-    {
-        var state = await AuthenticationStateTask;
-
-        Username = state.User.Identity.Name ?? string.Empty;
-        EmailAddress = state.User.Claims
-            .Where(c => c.Type.Equals(System.Security.Claims.ClaimTypes.Email))
-            .Select(c => c.Value)
-            .FirstOrDefault() ?? string.Empty;
-
-        Picture = state.User.Claims
-            .Where(c => c.Type.Equals("picture"))
-            .Select(c => c.Value)
-            .FirstOrDefault() ?? string.Empty;
-
-
-        IdToken = tokenProvider.IdToken;
-
-        await base.OnInitializedAsync();
-    }
-}
