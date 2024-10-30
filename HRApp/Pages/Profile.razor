@@ -1,22 +1,42 @@
 @page "/Profile"
-@using HRApp.Models
-@inject TokenProvider tokenProvider
 @attribute [Authorize]
 
 <PageTitle>Profile</PageTitle>
 
-<div class="wrapper">
-    <div class="profile-container">
+<div class="dashboard-wrapper">
+    <div class="profile-dashboard">
         <div class="profile-header">
             <h2>User Profile</h2>
         </div>
-        <div class="profile-content">
-            <div class="profile-picture">
-                <img src="@Picture" alt="Profile Picture" />
+        
+        <div class="profile-grid">
+            <div class="profile-main">
+                <div class="profile-card">
+                    <div class="profile-picture">
+                        <img src="@_picture" alt="Profile Picture" />
+                    </div>
+                    <div class="profile-info">
+                        <h3>@UserProfile?.FirstName @UserProfile?.LastName</h3>
+                        <p class="text-secondary">@UserProfile?.Email</p>
+                        <p class="text-secondary">@UserProfile?.Gender</p>
+                    </div>
+                </div>
             </div>
-            <div class="profile-details">
-                <h3>@Username</h3>
-                <p class="email"><i class="bi bi-envelope"></i> @EmailAddress</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <span class="stat-label">Department</span>
+                        <span class="stat-value">@UserProfile?.Department</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <span class="stat-label">Salary</span>
+                        <span class="stat-value">@UserProfile?.Salary</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
