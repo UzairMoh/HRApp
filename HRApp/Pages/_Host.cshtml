@@ -8,7 +8,7 @@
 @{
     Layout = "_Layout";
 
-    var tokens = new InitialApplicationState
+    var tokens = new ApplicationState
     {
         AccessToken = await HttpContext.GetTokenAsync("access_token"),
         IdToken = await HttpContext.GetTokenAsync("id_token"),

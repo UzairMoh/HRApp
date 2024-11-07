@@ -15,7 +15,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Radzen.Blazor" Version="5.5.1" />
+    <PackageReference Include="Radzen.Blazor" Version="5.5.5" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Data\Employees.db">

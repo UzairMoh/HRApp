@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using HRApp.Services;
 using HRApp.Models;
+using HRApp.Services.Employee;
 
 namespace HRApp.Pages;
 

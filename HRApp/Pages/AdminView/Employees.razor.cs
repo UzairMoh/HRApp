@@ -1,8 +1,7 @@
-﻿using HRApp.Models;
-using HRApp.Services;
+﻿using HRApp.Services.Employee;
 using Microsoft.AspNetCore.Components;
 
-namespace HRApp.Pages;
+namespace HRApp.Pages.AdminView;
 
 public partial class Employees
 {
@@ -12,9 +11,9 @@ public partial class Employees
     private bool ShowEdit { get; set; }
     public int EditingId { get; set; }
 
-    private Employee? NewEmployee { get; set; }
-    private Employee? EmployeeToUpdate { get; set; }
-    private List<Employee>? OurEmployees { get; set; }
+    private Models.Employees? NewEmployee { get; set; }
+    private Models.Employees? EmployeeToUpdate { get; set; }
+    private List<Models.Employees>? OurEmployees { get; set; }
 
     private string _searchTerm = string.Empty;
     private string _selectedDepartment = string.Empty;
@@ -30,7 +29,7 @@ public partial class Employees
     public void ShowCreateForm()
     {
         ShowCreate = true;
-        NewEmployee = new Employee();
+        NewEmployee = new Models.Employees();
     }
 
     public async Task CreateNewEmployeeAsync()
@@ -49,13 +48,13 @@ public partial class Employees
         OurEmployees = await EmployeeService!.GetEmployeesAsync();
     }
 
-    public async Task ShowEditFormAsync(Employee employee)
+    public async Task ShowEditFormAsync(Models.Employees employees)
     {
-        EmployeeToUpdate = await EmployeeService!.GetEmployeeAsync(employee.Id);
+        EmployeeToUpdate = await EmployeeService!.GetEmployeeAsync(employees.Id);
         if (EmployeeToUpdate is not null)
         {
             ShowEdit = true;
-            EditingId = employee.Id;
+            EditingId = employees.Id;
         }
     }
 
@@ -70,17 +69,17 @@ public partial class Employees
         ShowEdit = false;
     }
 
-    public async Task DeleteEmployeeAsync(Employee employee)
+    public async Task DeleteEmployeeAsync(Models.Employees employees)
     {
-        await EmployeeService!.DeleteEmployeeAsync(employee);
+        await EmployeeService!.DeleteEmployeeAsync(employees);
         await LoadEmployeesAsync();
     }
 
-    private List<Employee> FilteredEmployees => OurEmployees?
+    private List<Models.Employees> FilteredEmployees => OurEmployees?
         .Where(e => (string.IsNullOrEmpty(_searchTerm) || $"{e.FirstName} {e.LastName}".Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(_selectedDepartment) || e.Department == _selectedDepartment) &&
                     (string.IsNullOrEmpty(_selectedGender) || e.Gender == _selectedGender))
-        .ToList() ?? new List<Employee>();
+        .ToList() ?? new List<Models.Employees>();
 
     private void FilterEmployees(string term)
     {
