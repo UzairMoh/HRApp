@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HRApp.Data;
 
-public class EmployeeDataContext(IConfiguration configuration) : DbContext
+public class DataContext(IConfiguration configuration) : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -11,6 +11,8 @@ public class EmployeeDataContext(IConfiguration configuration) : DbContext
     }
 
     public DbSet<Employee> Employees { get; set; }
+    
+    public DbSet<TimeTrackingEntry> TimeTrackingEntries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -13,7 +13,7 @@ var connectionString = builder.Configuration.GetConnectionString("EmployeeDB");
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddDbContextFactory<EmployeeDataContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContextFactory<DataContext>(options => options.UseSqlite(connectionString));
 
 // Register the IEmployeeRepository
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -38,7 +38,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<EmployeeDataContext>();
+    var context = services.GetRequiredService<DataContext>();
 }
 
 // Configure the HTTP request pipeline.

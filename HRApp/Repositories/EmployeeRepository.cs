@@ -6,9 +6,9 @@ namespace HRApp.Repositories;
 
 public class EmployeeRepository : IEmployeeRepository
 {
-    private readonly EmployeeDataContext _context;
+    private readonly DataContext _context;
 
-    public EmployeeRepository(EmployeeDataContext context)
+    public EmployeeRepository(DataContext context)
     {
         _context = context;
     }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRApp.Migrations
 {
-    [DbContext(typeof(EmployeeDataContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20241001100135_SeedData")]
     partial class SeedData
     {
