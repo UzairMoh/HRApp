@@ -1,24 +1,38 @@
 @page "/admin-dashboard"
 <PageTitle>Admin Dashboard</PageTitle>
 
-<h1>Employee Analytics Dashboard</h1>
-
-<div class="analytics-container">
-    <div class="stat-card">
-        <h3>Total Employees</h3>
-        <p>@TotalEmployees</p>
-    </div>
-    <div class="stat-card">
-        <h3>Total Male Employees</h3>
-        <p>@TotalMaleEmployees</p>
-    </div>
-    <div class="stat-card">
-        <h3>Total Female Employees</h3>
-        <p>@TotalFemaleEmployees</p>
+<div class="dashboard-container">
+    <div class="header">
+        <h1>Analytics Overview</h1>
     </div>
 
-    <div class="chart-container">
-        <h2>Employees by Department</h2>
-        <canvas id="departmentChart"></canvas>
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>Total Employees</h3>
+                <p class="stat-number">@TotalEmployees</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>Active Employees</h3>
+                <p class="stat-number">@(TotalEmployees - MonthlyLeaves.Values.Sum())</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-row">
+        <div class="chart-card">
+            <h2>Department Distribution</h2>
+            <div class="chart-wrapper">
+                <canvas id="departmentChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <h2>Join/Leave Trends</h2>
+            <div class="chart-wrapper">
+                <canvas id="employeeFlowChart"></canvas>
+            </div>
+        </div>
     </div>
 </div>
