@@ -1,8 +1,7 @@
-using HRApp.Data;
 using HRApp.Models;
-using HRApp.Repositories;
+using HRApp.Repositories.Employee;
 
-namespace HRApp.Services;
+namespace HRApp.Services.Employee;
 
 public class EmployeeService : IEmployeeService
 {
@@ -13,52 +12,52 @@ public class EmployeeService : IEmployeeService
         _employeeRepository = employeeRepository;
     }
 
-    public async Task<List<Employee>> GetEmployeesAsync()
+    public async Task<List<Employees>> GetEmployeesAsync()
     {
         return await _employeeRepository.GetAllEmployeesAsync();
     }
 
-    Task<Employee?> IEmployeeService.GetEmployeeAsync(int id)
+    Task<Employees?> IEmployeeService.GetEmployeeAsync(int id)
     {
         return GetEmployeeAsync(id);
     }
 
-    Task IEmployeeService.CreateEmployeeAsync(Employee employee)
+    Task IEmployeeService.CreateEmployeeAsync(Employees employee)
     {
         return CreateEmployeeAsync(employee);
     }
 
-    Task IEmployeeService.UpdateEmployeeAsync(Employee employee)
+    Task IEmployeeService.UpdateEmployeeAsync(Employees employee)
     {
         return UpdateEmployeeAsync(employee);
     }
 
-    Task IEmployeeService.DeleteEmployeeAsync(Employee employee)
+    Task IEmployeeService.DeleteEmployeeAsync(Employees employee)
     {
         return DeleteEmployeeAsync(employee);
     }
 
-    Task<List<Employee>> IEmployeeService.GetEmployeesAsync()
+    Task<List<Employees>> IEmployeeService.GetEmployeesAsync()
     {
         return GetEmployeesAsync();
     }
 
-    public async Task<Employee?> GetEmployeeAsync(int id)
+    public async Task<Employees?> GetEmployeeAsync(int id)
     {
         return await _employeeRepository.GetEmployeeByIdAsync(id);
     }
 
-    public async Task CreateEmployeeAsync(Employee employee)
+    public async Task CreateEmployeeAsync(Employees employee)
     {
         await _employeeRepository.AddEmployeeAsync(employee);
     }
 
-    public async Task UpdateEmployeeAsync(Employee employee)
+    public async Task UpdateEmployeeAsync(Employees employee)
     {
         await _employeeRepository.UpdateEmployeeAsync(employee);
     }
 
-    public async Task DeleteEmployeeAsync(Employee employee)
+    public async Task DeleteEmployeeAsync(Employees employee)
     {
         await _employeeRepository.DeleteEmployeeAsync(employee);
     }

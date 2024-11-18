@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using HRApp.Services;
 using HRApp.Models;
+using HRApp.Services.Employee;
 
-namespace HRApp.Pages
+namespace HRApp.Pages.UserView
 {
     public partial class Profile
     {
@@ -13,7 +13,7 @@ namespace HRApp.Pages
         [CascadingParameter]
         public Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
-        private Employee? UserProfile { get; set; }
+        private Employees? UserProfile { get; set; }
         
         private string _picture = "";
 
@@ -27,7 +27,7 @@ namespace HRApp.Pages
 
             if (!string.IsNullOrEmpty(email))
             {
-                UserProfile = (await EmployeeService.GetEmployeesAsync())
+                UserProfile = (await EmployeeService!.GetEmployeesAsync())
                     .FirstOrDefault(e => e.Email == email);
             }
             

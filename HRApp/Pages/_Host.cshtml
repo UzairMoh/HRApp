@@ -4,10 +4,11 @@
 @using HRApp.Models
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radzen.Blazor
 @{
     Layout = "_Layout";
 
-    var tokens = new InitialApplicationState
+    var tokens = new ApplicationState
     {
         AccessToken = await HttpContext.GetTokenAsync("access_token"),
         IdToken = await HttpContext.GetTokenAsync("id_token"),
@@ -16,3 +17,4 @@
 }
 
 <component param-InitialState="tokens" type="typeof(App)" render-mode="ServerPrerendered"/>
+<component type="typeof(RadzenTheme)" render-mode="ServerPrerendered" param-Theme="@("material")" />

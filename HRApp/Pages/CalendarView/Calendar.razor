@@ -1,0 +1,27 @@
+@page "/calendar"
+@using HRApp.Models
+
+<AuthorizeView>
+    <Authorized>
+        <div class="row">
+            <div class="col-12">
+                <RadzenScheduler @ref="scheduler"
+                                 Data="@events"
+                                 TItem="CalendarEvent"
+                                 StartProperty="Start"
+                                 EndProperty="End"
+                                 TextProperty="Title"
+                                 SlotSelect=@OnSlotSelect
+                                 AppointmentSelect=@OnAppointmentSelect
+                                 style="height: 768px;">
+                    <RadzenDayView />
+                    <RadzenWeekView />
+                    <RadzenMonthView />
+                </RadzenScheduler>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <p>You must be logged in to view the calendar.</p>
+    </NotAuthorized>
+</AuthorizeView>

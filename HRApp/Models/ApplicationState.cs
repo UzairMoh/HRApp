@@ -1,6 +1,6 @@
 namespace HRApp.Models;
 
-public class InitialApplicationState
+public class ApplicationState
 {
     public string? IdToken { get; set; }
     public string? AccessToken { get; set; }
