@@ -9,169 +9,227 @@ namespace HRApp.Pages.CalendarView;
 
 public partial class Calendar
 {
-    [Inject] private DialogService? DialogService { get; set; }
-    [Inject] private ICalendarEventService? CalendarEventService { get; set; }
-    [Inject] private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    [Inject] private DialogService DialogService { get; set; } = default!;
+    [Inject] private ICalendarEventService CalendarEventService { get; set; } = default!;
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
-    private RadzenScheduler<CalendarEvent>? scheduler;
-    private List<CalendarEvent> events = new();
-    private int currentUserId;
+    private RadzenScheduler<CalendarEvent>? _scheduler;
+    private List<CalendarEvent> _events = new();
+    private int _currentUserId;
+
+    private static class EventColors
+    {
+        public const string TimeOff = "#FF7F7F";
+        public const string CompanyWide = "#7FB77E";
+        public const string Pending = "#EEBD00";
+        public const string UserEvent = "#A084DC";
+        public const string AdminEvent = "#6096B4";
+        public const string TextColor = "white";
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        if (AuthenticationStateProvider != null)
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _currentUserId = await GetEmployeeIdFromClaims(authState.User);
+        
+        if (_currentUserId > 0)
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-            
-            var employeeIdClaim = user.FindFirst("employee_id")?.Value;
-            if (!string.IsNullOrEmpty(employeeIdClaim) && int.TryParse(employeeIdClaim, out int employeeId))
-            {
-                currentUserId = employeeId;
-                await LoadEvents();
-            }
+            await LoadEvents();
         }
+    }
+    
+    private async Task RefreshCalendar()
+    {
+        await LoadEvents();
+    
+        if (_scheduler != null)
+        {
+            await _scheduler.Reload();
+        }
+    
+        StateHasChanged();
+    }
+
+    private Task<int> GetEmployeeIdFromClaims(System.Security.Claims.ClaimsPrincipal user)
+    {
+        var employeeIdClaim = user.FindFirst("employee_id")?.Value;
+        return Task.FromResult(!string.IsNullOrEmpty(employeeIdClaim) && int.TryParse(employeeIdClaim, out int employeeId) 
+            ? employeeId 
+            : 0);
     }
 
     private async Task LoadEvents()
     {
-        if (CalendarEventService == null) return;
-
-        var authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
-        var isAdmin = authState.User.IsInRole("Admin");
-
         try
         {
-            // Initialize empty list
-            events = new List<CalendarEvent>();
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var isAdmin = authState.User.IsInRole("Admin");
 
-            if (isAdmin)
-            {
-                // Get all events - no need to get pending events separately
-                // as they're already included in GetAllEventsAsync
-                events = await CalendarEventService.GetAllEventsAsync();
-            }
-            else
-            {
-                events = await CalendarEventService.GetUserEventsAsync(currentUserId);
-            }
-
-            // Add time off events
-            var timeOffEvents = await CalendarEventService.GetTimeOffEventsAsync(currentUserId, isAdmin);
-            events.AddRange(timeOffEvents);
+            _events = await LoadUserSpecificEvents(isAdmin);
+            var timeOffEvents = await CalendarEventService.GetTimeOffEventsAsync(_currentUserId, isAdmin);
+            _events.AddRange(timeOffEvents);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading events: {ex.Message}");
-            events = new List<CalendarEvent>();
+            HandleLoadError(ex);
         }
+    }
+
+    private async Task<List<CalendarEvent>> LoadUserSpecificEvents(bool isAdmin)
+    {
+        return isAdmin 
+            ? await CalendarEventService.GetAllEventsAsync() 
+            : await CalendarEventService.GetUserEventsAsync(_currentUserId);
     }
 
     private async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
     {
-        var authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var isAdmin = authState.User.IsInRole("Admin");
 
-        if (!isAdmin && args.Data.EmployeeId != currentUserId)
+        if (!isAdmin && args.Data.EmployeeId == _currentUserId && !args.Data.IsApproved)
         {
+            await DialogService.Alert("This event is pending approval and cannot be edited.", "Pending Approval");
             return;
         }
 
-        var copy = new CalendarEvent
+        if (!await CanEditEvent(args.Data))
+            return;
+
+        var eventCopy = CreateEventCopy(args.Data);
+        var updatedEvent = await OpenEventDialog("Edit Event", eventCopy);
+
+        if (updatedEvent != null)
         {
-            Id = args.Data.Id,
-            Start = args.Data.Start,
-            End = args.Data.End,
-            Title = args.Data.Title,
-            Description = args.Data.Description,
-            IsCompanyWide = args.Data.IsCompanyWide,
-            EmployeeId = args.Data.EmployeeId,
-            IsApproved = args.Data.IsApproved,
-            ApprovedAt = args.Data.ApprovedAt,
-            ApprovedBy = args.Data.ApprovedBy
-        };
-
-        var data = await DialogService!.OpenAsync<EditCalendarEvent>("Edit Event", 
-            new Dictionary<string, object> { { "CalendarEvent", copy } });
-
-        if (data != null)
-        {
-            args.Data.Start = data.Start;
-            args.Data.End = data.End;
-            args.Data.Title = data.Title;
-            args.Data.Description = data.Description;
-            args.Data.IsCompanyWide = data.IsCompanyWide;
-            args.Data.IsApproved = data.IsApproved;
-            args.Data.ApprovedAt = data.ApprovedAt;
-            args.Data.ApprovedBy = data.ApprovedBy;
-
-            await CalendarEventService!.SaveEventAsync(args.Data);
-            await scheduler!.Reload();
+            await UpdateExistingEvent(args.Data, updatedEvent);
+            await RefreshCalendar();
         }
+    }
+
+    private async Task<bool> CanEditEvent(CalendarEvent calendarEvent)
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var isAdmin = authState.User.IsInRole("Admin");
+
+        if (isAdmin)
+            return true;
+
+        if (!calendarEvent.IsApproved)
+            return false;
+
+        return calendarEvent.EmployeeId == _currentUserId && calendarEvent.IsApproved;
+    }
+
+    private static CalendarEvent CreateEventCopy(CalendarEvent original)
+    {
+        return new CalendarEvent
+        {
+            Id = original.Id,
+            Start = original.Start,
+            End = original.End,
+            Title = original.Title,
+            Description = original.Description,
+            IsCompanyWide = original.IsCompanyWide,
+            EmployeeId = original.EmployeeId,
+            IsApproved = original.IsApproved,
+            ApprovedAt = original.ApprovedAt,
+            ApprovedBy = original.ApprovedBy
+        };
+    }
+
+    private async Task UpdateExistingEvent(CalendarEvent original, CalendarEvent updated)
+    {
+        UpdateEventProperties(original, updated);
+        await CalendarEventService.SaveEventAsync(original);
+        await _scheduler!.Reload();
+    }
+
+    private static void UpdateEventProperties(CalendarEvent target, CalendarEvent source)
+    {
+        target.Start = source.Start;
+        target.End = source.End;
+        target.Title = source.Title;
+        target.Description = source.Description;
+        target.IsCompanyWide = source.IsCompanyWide;
+        target.IsApproved = source.IsApproved;
+        target.ApprovedAt = source.ApprovedAt;
+        target.ApprovedBy = source.ApprovedBy;
     }
 
     private async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
-        if (AuthenticationStateProvider == null) return;
+        var newEvent = await CreateNewEvent(args.Start, args.End);
+        var savedEvent = await OpenEventDialog("New Event", newEvent);
 
+        if (savedEvent != null)
+        {
+            savedEvent.EmployeeId = _currentUserId;
+            await CalendarEventService.SaveEventAsync(savedEvent);
+            await _scheduler!.Reload();
+            await RefreshCalendar();
+        }
+    }
+
+    private async Task<CalendarEvent> CreateNewEvent(DateTime start, DateTime end)
+    {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var isAdmin = authState.User.IsInRole("Admin");
 
-        // Create new event with properly set EmployeeId
         var newEvent = new CalendarEvent
         {
-            Start = args.Start,
-            End = args.End,
-            EmployeeId = currentUserId,  // Make sure this is set
-            IsApproved = isAdmin, // Auto-approve if admin
+            Start = start,
+            End = end,
+            EmployeeId = _currentUserId,
+            IsApproved = isAdmin,
             IsCompanyWide = false
         };
 
         if (isAdmin)
         {
-            newEvent.ApprovedBy = authState.User.Identity?.Name ?? "Admin";
-            newEvent.ApprovedAt = DateTime.UtcNow;
+            SetAdminApproval(newEvent, authState.User.Identity?.Name);
         }
 
-        var data = await DialogService!.OpenAsync<EditCalendarEvent>("New Event", 
-            new Dictionary<string, object> { { "CalendarEvent", newEvent } });
-
-        if (data != null)
-        {
-            // Ensure EmployeeId is maintained
-            data.EmployeeId = currentUserId;
-        
-            await CalendarEventService!.SaveEventAsync(data);
-            await scheduler!.Reload();
-        }
+        return newEvent;
     }
-    
+
+    private static void SetAdminApproval(CalendarEvent calendarEvent, string? adminName)
+    {
+        calendarEvent.ApprovedBy = adminName ?? "Admin";
+        calendarEvent.ApprovedAt = DateTime.UtcNow;
+    }
+
+    private async Task<CalendarEvent?> OpenEventDialog(string title, CalendarEvent calendarEvent)
+    {
+        return await DialogService.OpenAsync<EditCalendarEvent>(title, 
+            new Dictionary<string, object> { { "CalendarEvent", calendarEvent } });
+    }
+
     private void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<CalendarEvent> args)
     {
-        if (args.Data.Title?.StartsWith("Time Off -") == true)
-        {
-            // Soft coral/salmon color
-            args.Attributes["style"] = "background: #FF7F7F; color: white;";
-        }
-        else if (args.Data.IsCompanyWide)
-        {
-            // Mint/sage green
-            args.Attributes["style"] = "background: #7FB77E; color: white;";
-        }
-        else if (!args.Data.IsApproved)
-        {
-            // Muted gold
-            args.Attributes["style"] = "background: #EEBD00; color: white;";
-        }
-        else if (args.Data.EmployeeId == currentUserId)
-        {
-            // Soft purple/lavender
-            args.Attributes["style"] = "background: #A084DC; color: white;";
-        }
-        else
-        {
-            // Ocean blue
-            args.Attributes["style"] = "background: #6096B4; color: white;";
-        }
+        var style = GetEventStyle(args.Data);
+        args.Attributes["style"] = style;
+    }
+
+    private string GetEventStyle(CalendarEvent calendarEvent)
+    {
+        if (calendarEvent.Title?.StartsWith("Time Off -") == true)
+            return $"background: {EventColors.TimeOff}; color: {EventColors.TextColor};";
+        
+        if (calendarEvent.IsCompanyWide)
+            return $"background: {EventColors.CompanyWide}; color: {EventColors.TextColor};";
+        
+        if (!calendarEvent.IsApproved)
+            return $"background: {EventColors.Pending}; color: {EventColors.TextColor};";
+        
+        if (calendarEvent.EmployeeId == _currentUserId)
+            return $"background: {EventColors.UserEvent}; color: {EventColors.TextColor};";
+        
+        return $"background: {EventColors.AdminEvent}; color: {EventColors.TextColor};";
+    }
+    
+    private void HandleLoadError(Exception ex)
+    {
+        _events = new List<CalendarEvent>();
+        Console.WriteLine($"Error loading events: {ex.Message}");
     }
 }
