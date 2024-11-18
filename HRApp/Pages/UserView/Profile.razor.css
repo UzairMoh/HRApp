@@ -1,7 +1,8 @@
-/* Dashboard Layout */
+/* Base Layout */
 .dashboard-wrapper {
-    min-height: 100vh;
     padding: 2rem;
+    background-color: #f8f9fa;
+    min-height: 100vh;
 }
 
 .profile-dashboard {
@@ -14,56 +15,43 @@
 }
 
 .profile-header h2 {
-    color: #ffffff;
-    font-size: 1.8rem;
+    color: #212529;
+    font-size: 1.5rem;
     font-weight: 600;
-    margin: 0;
+    letter-spacing: -0.5px;
 }
 
-/* Grid Layout */
-.profile-grid {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: 1fr;
-}
-
-/* Main Profile Card */
+/* Profile Card */
 .profile-card {
-    background-color: #242424;
+    background: white;
     border-radius: 12px;
     padding: 2rem;
     display: flex;
     gap: 2rem;
     align-items: center;
-}
-
-.profile-picture {
-    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
 }
 
 .profile-picture img {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #404040;
-}
-
-.profile-info {
-    flex-grow: 1;
+    border: 3px solid #f8f9fa;
 }
 
 .profile-info h3 {
-    color: #ffffff;
-    font-size: 1.5rem;
-    margin: 0 0 1rem 0;
+    color: #212529;
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
     font-weight: 600;
 }
 
 .text-secondary {
-    color: #b3b3b3;
-    margin: 0.5rem 0;
-    font-size: 0.95rem;
+    color: #6c757d;
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
 }
 
 /* Stats Grid */
@@ -71,47 +59,41 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.5rem;
-    margin-top: 1rem;
 }
 
 .stat-card {
-    background-color: #242424;
+    background: white;
     border-radius: 12px;
     padding: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     transition: transform 0.2s ease;
 }
 
-.stat-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
 .stat-label {
-    color: #b3b3b3;
-    font-size: 0.9rem;
+    color: #6c757d;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-weight: 500;
 }
 
 .stat-value {
-    color: #ffffff;
+    color: #212529;
     font-size: 1.25rem;
     font-weight: 600;
-}
-
-/* Responsive Design */
-@media (min-width: 768px) {
-    .profile-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    margin-top: 0.5rem;
 }
 
 @media (max-width: 640px) {
+    .dashboard-wrapper {
+        padding: 1rem;
+    }
+
     .profile-card {
         flex-direction: column;
         text-align: center;
@@ -120,9 +102,5 @@
 
     .profile-picture {
         margin-bottom: 1rem;
-    }
-
-    .dashboard-wrapper {
-        padding: 1rem;
     }
 }
