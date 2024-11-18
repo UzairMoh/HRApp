@@ -77,16 +77,19 @@
 .stat-label {
     color: #6c757d;
     font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
 }
 
 .stat-value {
     color: #212529;
     font-size: 1.25rem;
     font-weight: 600;
-    margin-top: 0.5rem;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 640px) {

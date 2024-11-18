@@ -103,6 +103,17 @@ namespace HRApp.Migrations
                     b.HasData(
                         new
                         {
+                            Id = 999,
+                            Department = "Software Engineering",
+                            Email = "admin@hrapp.co.uk",
+                            FirstName = "Admin",
+                            Gender = "None",
+                            JoinDate = new DateTime(2022, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastName = "Account",
+                            Salary = "£999999.00"
+                        },
+                        new
+                        {
                             Id = 1,
                             Department = "Software Engineering",
                             Email = "schen@company.com",

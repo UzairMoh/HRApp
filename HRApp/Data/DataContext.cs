@@ -40,6 +40,12 @@ public class DataContext(IConfiguration configuration) : DbContext
         modelBuilder.Entity<Employees>().HasData(
             new Employees
             {
+                Id = 999, FirstName = "Admin", LastName = "Account", Email = "admin@hrapp.co.uk",
+                Gender = "None", Department = "Software Engineering", Salary = "£999999.00",
+                JoinDate = new DateTime(2022, 3, 14)
+            },
+            new Employees
+            {
                 Id = 1, FirstName = "Sarah", LastName = "Chen", Email = "schen@company.com",
                 Gender = "Female", Department = "Software Engineering", Salary = "£65000.00",
                 JoinDate = new DateTime(2022, 3, 15)
