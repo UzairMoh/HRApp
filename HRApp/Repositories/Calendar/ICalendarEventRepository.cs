@@ -5,6 +5,7 @@ namespace HRApp.Repositories.Calendar
     public interface ICalendarEventRepository
     {
         Task<List<CalendarEvent>> GetAllEventsAsync();
+        Task<List<CalendarEvent>> GetPendingEventsAsync();
         Task<List<CalendarEvent>> GetUserEventsAsync(int userId);
         Task<List<CalendarEvent>> GetTimeOffEventsAsync(int userId, bool isAdmin);
         Task AddEventAsync(CalendarEvent calendarEvent);

@@ -13,11 +13,24 @@
                                  TextProperty="Title"
                                  SlotSelect=@OnSlotSelect
                                  AppointmentSelect=@OnAppointmentSelect
+                                 AppointmentRender=@OnAppointmentRender
                                  style="height: 768px;">
                     <RadzenDayView />
                     <RadzenWeekView />
                     <RadzenMonthView />
                 </RadzenScheduler>
+
+                <!-- Legend -->
+                <div class="mt-3">
+                    <RadzenText TextStyle="TextStyle.Subtitle2">Legend:</RadzenText>
+                    <div class="d-flex gap-3 mt-2">
+                        <div class="custom-badge" style="background: #7FB77E;">Company-wide Events</div>
+                        <div class="custom-badge" style="background: #6096B4;">Admin Events</div>
+                        <div class="custom-badge" style="background: #FFD93D; color: black;">Pending Approval</div>
+                        <div class="custom-badge" style="background: #A084DC;">User Events</div>
+                        <div class="custom-badge" style="background: #FF7F7F;">Time Off</div>
+                    </div>
+                </div>
             </div>
         </div>
     </Authorized>
@@ -25,3 +38,14 @@
         <p>You must be logged in to view the calendar.</p>
     </NotAuthorized>
 </AuthorizeView>
+
+<style>
+    .custom-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        color: white;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+    }
+</style>

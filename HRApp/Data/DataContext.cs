@@ -18,7 +18,24 @@ public class DataContext(IConfiguration configuration) : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Employee table configuration
         modelBuilder.Entity<Employees>().ToTable("Employee");
+
+        // Configure CalendarEvent relationships
+        modelBuilder.Entity<CalendarEvent>()
+            .HasOne(e => e.Employee)
+            .WithMany()
+            .HasForeignKey(e => e.EmployeeId)
+            .IsRequired(false)  // Allow null for company-wide events
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure TimeOffRequest relationships
+        modelBuilder.Entity<TimeOffRequest>()
+            .HasOne(t => t.Employee)
+            .WithMany(e => e.TimeOffRequests)
+            .HasForeignKey(t => t.EmployeeId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Employees>().HasData(
             new Employees

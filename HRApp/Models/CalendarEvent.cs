@@ -51,4 +51,8 @@ public class CalendarEvent
     /// </summary>
     [Required(ErrorMessage = "End date is required.")]
     public DateTime End { get; set; }
+    
+    public bool IsApproved { get; set; } = false;
+    public DateTime? ApprovedAt { get; set; }
+    public string? ApprovedBy { get; set; }
 }
