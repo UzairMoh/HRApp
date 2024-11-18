@@ -7,6 +7,8 @@ namespace HRApp.Services.Calendar
         Task<List<CalendarEvent>> GetAllEventsAsync();
         Task<List<CalendarEvent>> GetUserEventsAsync(int userId);
         Task<List<CalendarEvent>> GetTimeOffEventsAsync(int userId, bool isAdmin);
+        Task<List<CalendarEvent>> GetPendingEventsAsync();
+        Task ApproveEventAsync(CalendarEvent calendarEvent, string approvedBy);
         Task SaveEventAsync(CalendarEvent calendarEvent);
     }
 }

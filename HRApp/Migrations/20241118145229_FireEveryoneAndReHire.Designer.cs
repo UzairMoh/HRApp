@@ -3,6 +3,7 @@ using System;
 using HRApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class EmployeeDataContextModelSnapshot : ModelSnapshot
+    [Migration("20241118145229_FireEveryoneAndReHire")]
+    partial class FireEveryoneAndReHire
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -101,17 +104,6 @@ namespace HRApp.Migrations
                     b.ToTable("Employee", (string)null);
 
                     b.HasData(
-                        new
-                        {
-                            Id = 999,
-                            Department = "Software Engineering",
-                            Email = "admin@hrapp.co.uk",
-                            FirstName = "Admin",
-                            Gender = "None",
-                            JoinDate = new DateTime(2022, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Account",
-                            Salary = "£999999.00"
-                        },
                         new
                         {
                             Id = 1,

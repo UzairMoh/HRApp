@@ -5,19 +5,32 @@
     <Authorized>
         <div class="row">
             <div class="col-12">
-                <RadzenScheduler @ref="scheduler"
-                                 Data="@events"
+                <RadzenScheduler @ref="_scheduler"
+                                 Data="@_events"
                                  TItem="CalendarEvent"
                                  StartProperty="Start"
                                  EndProperty="End"
                                  TextProperty="Title"
                                  SlotSelect=@OnSlotSelect
                                  AppointmentSelect=@OnAppointmentSelect
+                                 AppointmentRender=@OnAppointmentRender
                                  style="height: 768px;">
                     <RadzenDayView />
                     <RadzenWeekView />
                     <RadzenMonthView />
                 </RadzenScheduler>
+
+                <!-- Legend -->
+                <div class="mt-3">
+                    <RadzenText TextStyle="TextStyle.Subtitle2">Legend:</RadzenText>
+                    <div class="d-flex gap-3 mt-2">
+                        <div class="custom-badge" style="background: #7FB77E;">Company-wide Events</div>
+                        <div class="custom-badge" style="background: #6096B4;">Admin Events</div>
+                        <div class="custom-badge" style="background: #EEBD00;">Pending Approval</div>
+                        <div class="custom-badge" style="background: #A084DC;">User Events</div>
+                        <div class="custom-badge" style="background: #FF7F7F;">Time Off</div>
+                    </div>
+                </div>
             </div>
         </div>
     </Authorized>

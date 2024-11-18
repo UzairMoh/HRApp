@@ -1,4 +1,5 @@
 @using HRApp.Models
+@using HRApp.Services.Calendar
 
 <div class="p-4">
     <div class="row">
@@ -39,8 +40,9 @@
             </div>
         </div>
     </div>
+
     <AuthorizeView Roles="Admin">
-        <Authorized>
+        <Authorized Context="authContext">
             <div class="row mt-2">
                 <div class="col-md-12">
                     <div class="d-flex align-items-center">
@@ -49,6 +51,36 @@
                     </div>
                 </div>
             </div>
+
+            @if (!CalendarEvent.IsCompanyWide && !CalendarEvent.IsApproved)
+            {
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning">
+                            This event requires approval
+                        </div>
+                        <RadzenButton Click="@ApproveEvent"
+                                      ButtonStyle="ButtonStyle.Success"
+                                      Text="Approve Event"
+                                      Class="mt-2" />
+                    </div>
+                </div>
+            }
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView>
+        <Authorized Context="authContext">
+            @if (!authContext.User.IsInRole("Admin") && !CalendarEvent.IsApproved)
+            {
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            Your event will be visible after admin approval
+                        </div>
+                    </div>
+                </div>
+            }
         </Authorized>
     </AuthorizeView>
 
@@ -63,11 +95,3 @@
         </div>
     </div>
 </div>
-
-@code {
-    [Parameter]
-    public CalendarEvent CalendarEvent { get; set; } = new();
-
-    [Inject]
-    public DialogService DialogService { get; set; } = default!;
-}

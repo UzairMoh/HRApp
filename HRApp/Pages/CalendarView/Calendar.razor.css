@@ -1,0 +1,157 @@
+.custom-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.row {
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+::deep .rz-scheduler {
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+::deep .rz-scheduler-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #edf2f7;
+    padding: 1rem;
+}
+
+::deep .rz-scheduler-views {
+    background-color: transparent;
+}
+
+::deep .rz-scheduler-view-button {
+    border-radius: 6px;
+    margin: 0 4px;
+    transition: all 0.2s ease;
+}
+
+::deep .rz-scheduler-view-button:hover {
+    background-color: #edf2f7;
+}
+
+::deep .rz-scheduler-view-button.rz-state-active {
+    background-color: #2d3748;
+    color: white;
+}
+
+::deep .rz-event {
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+::deep .rz-event:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+::deep .rz-scheduler-content {
+    border: none;
+}
+
+::deep .rz-scheduler-month-view .rz-scheduler-content {
+    height: calc(100% - 120px);
+}
+
+::deep .rz-slot {
+    border-color: #edf2f7;
+}
+
+::deep .rz-scheduler-month-view .rz-slot {
+    padding: 0.5rem;
+}
+
+::deep .rz-scheduler-month-view .rz-slot.rz-today {
+    background-color: #f7fafc;
+}
+
+.mt-3 {
+    margin-top: 2rem !important;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+::deep .rz-text-subtitle2 {
+    color: #2d3748;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.custom-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.custom-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+::deep .rz-scheduler-nav-button {
+    border-radius: 6px;
+    border: 1px solid #edf2f7;
+    background-color: white;
+    color: #2d3748;
+    transition: all 0.2s ease;
+}
+
+::deep .rz-scheduler-nav-button:hover {
+    background-color: #f8f9fa;
+}
+
+::deep .rz-scheduler-nav-title {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+::deep .rz-timepicker {
+    color: #4a5568;
+    font-size: 0.875rem;
+}
+
+p {
+    padding: 2rem;
+    text-align: center;
+    color: #2d3748;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin: 1rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .row {
+        padding: 1rem;
+    }
+
+    .d-flex.gap-3 {
+        flex-wrap: wrap;
+    }
+
+    .custom-badge {
+        margin-bottom: 0.5rem;
+    }
+}

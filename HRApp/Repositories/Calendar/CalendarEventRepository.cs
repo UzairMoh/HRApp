@@ -19,6 +19,14 @@ namespace HRApp.Repositories.Calendar
                 .Where(e => e.IsCompanyWide || e.EmployeeId == userId)
                 .ToListAsync();
         }
+        
+        public async Task<List<CalendarEvent>> GetPendingEventsAsync()
+        {
+            return await context.CalendarEvents
+                .Include(e => e.Employee)
+                .Where(e => !e.IsApproved && !e.IsCompanyWide)
+                .ToListAsync();
+        }
 
         public async Task<List<CalendarEvent>> GetTimeOffEventsAsync(int userId, bool isAdmin)
         {

@@ -20,6 +20,19 @@ namespace HRApp.Services.Calendar
             return await calendarEventRepository.GetTimeOffEventsAsync(userId, isAdmin);
         }
 
+        public async Task<List<CalendarEvent>> GetPendingEventsAsync()
+        {
+            return await calendarEventRepository.GetPendingEventsAsync();
+        }
+
+        public async Task ApproveEventAsync(CalendarEvent calendarEvent, string approvedBy)
+        {
+            calendarEvent.IsApproved = true;
+            calendarEvent.ApprovedAt = DateTime.UtcNow;
+            calendarEvent.ApprovedBy = approvedBy;
+            await calendarEventRepository.UpdateEventAsync(calendarEvent);
+        }
+
         public async Task SaveEventAsync(CalendarEvent calendarEvent)
         {
             if (calendarEvent.Id == 0)
