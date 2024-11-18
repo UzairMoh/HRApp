@@ -1,67 +1,73 @@
 @using HRApp.Models
 
-<div class="modal" tabindex="-1" style="display:block">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">@(CalendarEvent.Id == 0 ? "New Event" : "Edit Event")</h5>
-                <button type="button" class="btn-close" @onclick="@(() => DialogService.Close(null))"></button>
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Title</label>
+                <RadzenTextBox class="w-100" @bind-Value="CalendarEvent.Title" />
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" class="form-control" id="title" @bind="CalendarEvent.Title" />
-                        </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Start</label>
+                <RadzenDatePicker class="w-100"
+                                  @bind-Value="CalendarEvent.Start"
+                                  DateFormat="dd/MM/yyyy HH:mm"
+                                  ShowTime="true"
+                                  ShowSeconds="false" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>End</label>
+                <RadzenDatePicker class="w-100"
+                                  @bind-Value="CalendarEvent.End"
+                                  DateFormat="dd/MM/yyyy HH:mm"
+                                  ShowTime="true"
+                                  ShowSeconds="false" />
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Description</label>
+                <RadzenTextArea class="w-100" @bind-Value="CalendarEvent.Description" />
+            </div>
+        </div>
+    </div>
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <div class="d-flex align-items-center">
+                        <RadzenCheckBox @bind-Value="CalendarEvent.IsCompanyWide" />
+                        <label class="ms-2 mb-0">Company-wide event</label>
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="startDate">Start</label>
-                            <input type="datetime-local" class="form-control" id="startDate" @bind="CalendarEvent.Start" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="endDate">End</label>
-                            <input type="datetime-local" class="form-control" id="endDate" @bind="CalendarEvent.End" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" @bind="CalendarEvent.Description"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <AuthorizeView Roles="Admin">
-                    <Authorized>
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="isCompanyWide" @bind="CalendarEvent.IsCompanyWide">
-                                    <label class="form-check-label" for="isCompanyWide">
-                                        Company-wide event
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </Authorized>
-                </AuthorizeView>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="@(() => DialogService.Close(null))">Cancel</button>
-                <button type="button" class="btn btn-primary" @onclick="@(() => DialogService.Close(CalendarEvent))">Save</button>
-            </div>
+        </Authorized>
+    </AuthorizeView>
+
+    <div class="row mt-4">
+        <div class="col-md-12 d-flex justify-content-end gap-2">
+            <RadzenButton Click="@(() => DialogService.Close(null))"
+                          ButtonStyle="ButtonStyle.Light"
+                          Text="Cancel" />
+            <RadzenButton Click="@(() => DialogService.Close(CalendarEvent))"
+                          ButtonStyle="ButtonStyle.Primary"
+                          Text="Save" />
         </div>
     </div>
 </div>
 
 @code {
-    [Parameter] public CalendarEvent CalendarEvent { get; set; } = new();
-    [Inject] public DialogService DialogService { get; set; } = default!;
+    [Parameter]
+    public CalendarEvent CalendarEvent { get; set; } = new();
+
+    [Inject]
+    public DialogService DialogService { get; set; } = default!;
 }

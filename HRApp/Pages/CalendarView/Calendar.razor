@@ -5,13 +5,13 @@
     <Authorized>
         <div class="row">
             <div class="col-12">
-                <RadzenScheduler @ref="scheduler" 
-                                 Data="@events" 
+                <RadzenScheduler @ref="scheduler"
+                                 Data="@events"
                                  TItem="CalendarEvent"
-                                 StartProperty="Start" 
+                                 StartProperty="Start"
                                  EndProperty="End"
-                                 TextProperty="Title" 
-                                 SlotSelect=@OnSlotSelect 
+                                 TextProperty="Title"
+                                 SlotSelect=@OnSlotSelect
                                  AppointmentSelect=@OnAppointmentSelect
                                  style="height: 768px;">
                     <RadzenDayView />

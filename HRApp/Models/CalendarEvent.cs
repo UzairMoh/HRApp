@@ -26,18 +26,6 @@ public class CalendarEvent
     public string? Description { get; set; }
 
     /// <summary>
-    /// Gets or sets the start date and time of the event.
-    /// </summary>
-    [Required(ErrorMessage = "Start date is required.")]
-    public DateTime Start { get; set; }
-
-    /// <summary>
-    /// Gets or sets the end date and time of the event.
-    /// </summary>
-    [Required(ErrorMessage = "End date is required.")]
-    public DateTime End { get; set; }
-
-    /// <summary>
     /// Gets or sets whether the event is company-wide.
     /// </summary>
     public bool IsCompanyWide { get; set; }
@@ -51,4 +39,16 @@ public class CalendarEvent
     /// Gets or sets the employee associated with this event.
     /// </summary>
     public virtual Employees? Employee { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the start date and time of the event.
+    /// </summary>
+    [Required(ErrorMessage = "Start date is required.")]
+    public DateTime Start { get; set; }
+
+    /// <summary>
+    /// Gets or sets the end date and time of the event.
+    /// </summary>
+    [Required(ErrorMessage = "End date is required.")]
+    public DateTime End { get; set; }
 }
