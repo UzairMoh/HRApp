@@ -161,7 +161,7 @@ public partial class Calendar
         else if (!args.Data.IsApproved)
         {
             // Muted gold
-            args.Attributes["style"] = "background: #FFD93D; color: black;";
+            args.Attributes["style"] = "background: #EEBD00; color: white;";
         }
         else if (args.Data.EmployeeId == currentUserId)
         {
