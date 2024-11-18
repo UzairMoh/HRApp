@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using HRApp.Models;
 using HRApp.Services.Employee;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
-namespace HRApp.Pages;
+namespace HRApp.Pages.AdminView;
 
-public partial class Home : ComponentBase
+public partial class AdminDashboard : ComponentBase
 {
     [Inject] public IEmployeeService EmployeeService { get; set; } = null!;
 
@@ -46,7 +46,7 @@ public partial class Home : ComponentBase
 
     private async Task LoadModule()
     {
-        await JsRuntime.InvokeVoidAsync("import", "./Pages/Home.razor.js");
+        await JsRuntime.InvokeVoidAsync("import", "./Pages/AdminView/AdminDashboard.razor.js");
     }
 
     private async Task LoadDepartmentChart()

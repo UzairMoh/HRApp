@@ -1,0 +1,60 @@
+@page "/"
+<PageTitle>Dashboard</PageTitle>
+
+<div class="dashboard-container">
+    @if (employee == null)
+    {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading dashboard...</p>
+        </div>
+    }
+    else
+    {
+        <div class="welcome-section">
+            <h1>Welcome back, @employee.FirstName!</h1>
+            <p class="subtitle">Here's your HR dashboard overview</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Employee Info Card -->
+            <div class="dashboard-card employee-info">
+                <h2>Employee Information</h2>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="label">Employee ID:</span>
+                        <span class="value">@employee.Id</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Department:</span>
+                        <span class="value">@employee.Department</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Position:</span>
+                        <span class="value">@employee.Department</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Email:</span>
+                        <span class="value">@employee.Email</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Card -->
+            <div class="dashboard-card quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="action-button">
+                        Request Time Off
+                    </button>
+                    <button class="action-button">
+                        View Schedule
+                    </button>
+                    <button class="action-button">
+                        Update Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
