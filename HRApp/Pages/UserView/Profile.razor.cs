@@ -27,7 +27,7 @@ namespace HRApp.Pages.UserView
 
             if (!string.IsNullOrEmpty(email))
             {
-                UserProfile = (await EmployeeService.GetEmployeesAsync())
+                UserProfile = (await EmployeeService!.GetEmployeesAsync())
                     .FirstOrDefault(e => e.Email == email);
             }
             

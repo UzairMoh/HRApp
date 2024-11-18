@@ -5,7 +5,7 @@ namespace HRApp.Models
     /// <summary>
     /// Represents an employee in the HR application.
     /// </summary>
-    public class Employees
+    public sealed class Employees
     {
         /// <summary>
         /// Gets or sets the unique identifier for the employee.
@@ -48,6 +48,6 @@ namespace HRApp.Models
         [StringLength(20, ErrorMessage = "Salary cannot be longer than 20 characters.")]
         public string? Salary { get; set; }
         
-        public virtual ICollection<TimeOffRequest> TimeOffRequests { get; set; }
+        public ICollection<TimeOffRequest>? TimeOffRequests { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace HRApp.Repositories.Calendar
                 .Where(t => t.Status == RequestStatus.Approved && (isAdmin || t.EmployeeId == userId))
                 .Select(t => new CalendarEvent
                 {
-                    Title = $"Time Off - {t.Employee.FirstName} {t.Employee.LastName} ({t.Type})",
+                    Title = $"Time Off - {t.Employee!.FirstName} {t.Employee.LastName} ({t.Type})",
                     Description = t.Description,
                     Start = t.StartDate,
                     End = t.EndDate,
