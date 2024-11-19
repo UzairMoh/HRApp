@@ -56,4 +56,25 @@ public class TimeOffRequest
     /// Gets or sets the creation date of the request.
     /// </summary>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    /// <summary>
+    /// Gets or sets the admin who approved/rejected the request
+    /// </summary>
+    public string? ReviewedBy { get; set; }
+
+    /// <summary>
+    /// Gets or sets when the request was reviewed
+    /// </summary>
+    public DateTime? ReviewedAt { get; set; }
+
+    /// <summary>
+    /// Gets or sets admin comments on approval/rejection
+    /// </summary>
+    [StringLength(500)]
+    public string? AdminComments { get; set; }
+
+    /// <summary>
+    /// Gets the total number of days requested
+    /// </summary>
+    public int DaysRequested => (EndDate - StartDate).Days + 1;
 }
