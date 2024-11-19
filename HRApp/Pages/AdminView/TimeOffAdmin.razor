@@ -1,0 +1,88 @@
+@page "/time-off-admin"
+@using HRApp.Models
+@using HRApp.Models.Enums
+<PageTitle>Time Off Management</PageTitle>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <div class="page-container">
+            <div class="header">
+                <h2>Time Off Management</h2>
+            </div>
+
+            <div class="filter-card">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <RadzenDropDown @bind-Value="selectedStatus"
+                                      Data="@Enum.GetValues(typeof(RequestStatus))"
+                                      Change="@LoadRequests"
+                                      AllowClear="true"
+                                      Placeholder="All Statuses"
+                                      Class="w-100"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="requests-card">
+                <RadzenDataGrid Data="@requests"
+                              TItem="TimeOffRequest"
+                              AllowPaging="true"
+                              PageSize="10">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="TimeOffRequest" Title="Employee">
+                            <Template Context="request">
+                                @(request.Employee?.FirstName) @(request.Employee?.LastName)
+                            </Template>
+                        </RadzenDataGridColumn>
+                        
+                        <RadzenDataGridColumn TItem="TimeOffRequest" Property="Type" Title="Type"/>
+                        
+                        <RadzenDataGridColumn TItem="TimeOffRequest" Property="StartDate" Title="From">
+                            <Template Context="request">
+                                @request.StartDate.ToShortDateString()
+                            </Template>
+                        </RadzenDataGridColumn>
+                        
+                        <RadzenDataGridColumn TItem="TimeOffRequest" Property="EndDate" Title="To">
+                            <Template Context="request">
+                                @request.EndDate.ToShortDateString()
+                            </Template>
+                        </RadzenDataGridColumn>
+                        
+                        <RadzenDataGridColumn TItem="TimeOffRequest" Property="Status" Title="Status">
+                            <Template Context="request">
+                                <div class="status-badge @GetStatusClass(request.Status)">
+                                    @request.Status
+                                </div>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        
+                        <RadzenDataGridColumn TItem="TimeOffRequest" Title="Actions">
+                            <Template Context="request">
+                                @if (request.Status == RequestStatus.Pending)
+                                {
+                                    <div class="action-buttons">
+                                        <RadzenButton Click="@(() => ApproveRequest(request))"
+                                                     ButtonStyle="ButtonStyle.Success"
+                                                     Size="ButtonSize.Small"
+                                                     Text="Approve"/>
+                                        <RadzenButton Click="@(() => RejectRequest(request))"
+                                                     ButtonStyle="ButtonStyle.Danger"
+                                                     Size="ButtonSize.Small"
+                                                     Text="Reject"/>
+                                    </div>
+                                }
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="unauthorized">
+            <p>You are not authorized to view this page.</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

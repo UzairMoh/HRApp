@@ -4,8 +4,10 @@ using HRApp.Data;
 using HRApp.Models;
 using HRApp.Repositories.Calendar;
 using HRApp.Repositories.Employee;
+using HRApp.Repositories.Leave;
 using HRApp.Services.Calendar;
 using HRApp.Services.Employee;
+using HRApp.Services.Leave;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
@@ -30,6 +32,8 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
 builder.Services.AddScoped<ICalendarEventService, CalendarEventService>();
+builder.Services.AddScoped<ILeaveManagementRepository, LeaveManagementRepository>();
+builder.Services.AddScoped<ILeaveManagementService, LeaveManagementService>();
 builder.Services.AddScoped<TokenProvider>();
 
 builder.Services.AddAuth0WebAppAuthentication(options =>

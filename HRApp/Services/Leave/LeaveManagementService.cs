@@ -107,4 +107,9 @@ public class LeaveManagementService : ILeaveManagementService
    {
        return await _leaveManagementRepository.GetApprovedRequestsInPeriodAsync(start, end);
    }
+   
+   public async Task<IEnumerable<TimeOffRequest>> GetByStatusAsync(RequestStatus status)
+   {
+       return await _leaveManagementRepository.GetByStatusAsync(status);
+   }
 }

@@ -1,0 +1,75 @@
+@page "/time-off"
+@using HRApp.Models
+@using HRApp.Models.Enums
+<PageTitle>Time Off Requests</PageTitle>
+
+<div class="page-container">
+    <div class="form-card">
+        <h2>Request Time Off</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Type of Leave</label>
+                <RadzenDropDown @bind-Value="@newRequest.Type"
+                                Data="@Enum.GetValues(typeof(TimeOffType))"
+                                Class="w-100"/>
+            </div>
+
+            <div class="form-group">
+                <label>Start Date</label>
+                <RadzenDatePicker @bind-Value="@newRequest.StartDate"
+                                  ShowTime="false"
+                                  DateFormat="dd/MM/yyyy"
+                                  Class="w-100"/>
+            </div>
+
+            <div class="form-group">
+                <label>End Date</label>
+                <RadzenDatePicker @bind-Value="@newRequest.EndDate"
+                                  ShowTime="false"
+                                  DateFormat="dd/MM/yyyy"
+                                  Class="w-100"/>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <RadzenTextArea @bind-Value="@newRequest.Description"
+                                Class="w-100"/>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <RadzenButton Click="@SubmitRequest"
+                          ButtonStyle="ButtonStyle.Primary"
+                          Text="Submit Request"/>
+        </div>
+    </div>
+
+    <div class="history-card">
+        <h2>My Requests</h2>
+        <RadzenDataGrid Data="@requests"
+                        TItem="TimeOffRequest"
+                        AllowPaging="true"
+                        PageSize="5">
+            <Columns>
+                <RadzenDataGridColumn TItem="TimeOffRequest" Property="Type" Title="Type"/>
+                <RadzenDataGridColumn TItem="TimeOffRequest" Property="StartDate" Title="From">
+                    <Template Context="data">
+                        @data.StartDate.ToShortDateString()
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="TimeOffRequest" Property="EndDate" Title="To">
+                    <Template Context="data">
+                        @data.EndDate.ToShortDateString()
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="TimeOffRequest" Property="Status" Title="Status">
+                    <Template Context="data">
+                        <div class="status-badge @GetStatusClass(data.Status)">
+                            @data.Status
+                        </div>
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+</div>

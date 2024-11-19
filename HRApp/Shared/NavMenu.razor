@@ -24,8 +24,15 @@
             </AuthorizeView>
             <AuthorizeView>
                 <Authorized>
-                    <NavLink class="nav-link" href="/calendar" Match="NavLinkMatch.All">
-                        <span class="oi oi-calendar" aria-hidden="true"></span> Calendar
+                    <NavLink class="nav-link" href="/events" Match="NavLinkMatch.All">
+                        <span class="oi oi-calendar" aria-hidden="true"></span> Events
+                    </NavLink>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="nav-link" href="/time-off" Match="NavLinkMatch.All">
+                        <span class="oi oi-timer" aria-hidden="true"></span> Time Off
                     </NavLink>
                 </Authorized>
             </AuthorizeView>
@@ -42,6 +49,9 @@
                     <Authorized>
                         <NavLink class="nav-link" href="/admin-dashboard" Match="NavLinkMatch.All">
                             <span class="oi oi-script" aria-hidden="true"></span> Admin Dashboard
+                        </NavLink>
+                        <NavLink class="nav-link" href="/time-off-admin" Match="NavLinkMatch.All">
+                            <span class="oi oi-clipboard" aria-hidden="true"></span> Leave Management
                         </NavLink>
                     </Authorized>
                 </AuthorizeView>

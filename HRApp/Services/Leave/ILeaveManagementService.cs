@@ -13,4 +13,5 @@ public interface ILeaveManagementService
     Task<TimeOffRequest> UpdateRequestStatusAsync(int requestId, RequestStatus status, string reviewedBy, string? comments = null);
     Task<TimeOffRequest?> GetRequestByIdAsync(int requestId);
     Task<IEnumerable<TimeOffRequest>> GetApprovedRequestsForPeriodAsync(DateTime start, DateTime end);
+    Task<IEnumerable<TimeOffRequest>> GetByStatusAsync(RequestStatus status);
 }
