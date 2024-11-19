@@ -14,7 +14,7 @@
                 <div class="filter-grid">
                     <div class="filter-group">
                         <label>Status</label>
-                        <RadzenDropDown @bind-Value="selectedStatus"
+                        <RadzenDropDown @bind-Value="_selectedStatus"
                                       Data="@Enum.GetValues(typeof(RequestStatus))"
                                       Change="@LoadRequests"
                                       AllowClear="true"
@@ -25,7 +25,7 @@
             </div>
 
             <div class="requests-card">
-                <RadzenDataGrid Data="@requests"
+                <RadzenDataGrid Data="@_requests"
                               TItem="TimeOffRequest"
                               AllowPaging="true"
                               PageSize="10">

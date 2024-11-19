@@ -4,15 +4,15 @@ using HRApp.Services.Leave;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace HRApp.Pages.TimeOffView;
+namespace HRApp.Pages.UserView;
 
 public partial class TimeOff
 {
     [Inject] private ILeaveManagementService LeaveManagementService { get; set; } = default!;
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     
-    private TimeOffRequest newRequest = new();
-    private List<TimeOffRequest> requests = new();
+    private TimeOffRequest _newRequest = new();
+    private List<TimeOffRequest> _requests = new();
     private int _currentUserId;
 
     protected override async Task OnInitializedAsync()
@@ -34,15 +34,15 @@ public partial class TimeOff
     private async Task LoadRequests()
     {
         var result = await LeaveManagementService.GetUserRequestsAsync(_currentUserId);
-        requests = result.ToList();
+        _requests = result.ToList();
     }
     
     private async Task SubmitRequest()
     {
-        newRequest.EmployeeId = _currentUserId;
-        await LeaveManagementService.SubmitRequestAsync(newRequest);
+        _newRequest.EmployeeId = _currentUserId;
+        await LeaveManagementService.SubmitRequestAsync(_newRequest);
         await LoadRequests();
-        newRequest = new TimeOffRequest();
+        _newRequest = new TimeOffRequest();
     }
     
     private static string GetStatusClass(RequestStatus status) => status switch
