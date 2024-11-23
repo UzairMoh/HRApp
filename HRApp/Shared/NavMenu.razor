@@ -38,14 +38,12 @@
             </AuthorizeView>
             @if (_loggedIn) 
             {
-                <AuthorizeView>
+                <AuthorizeView Roles="Admin">
                     <Authorized>
                         <NavLink class="nav-link" href="/employees" Match="NavLinkMatch.All">
                             <span class="oi oi-people" aria-hidden="true"></span> Employees
                         </NavLink>
                     </Authorized>
-                </AuthorizeView>
-                <AuthorizeView Roles="Admin">
                     <Authorized>
                         <NavLink class="nav-link" href="/admin-dashboard" Match="NavLinkMatch.All">
                             <span class="oi oi-script" aria-hidden="true"></span> Admin Dashboard
