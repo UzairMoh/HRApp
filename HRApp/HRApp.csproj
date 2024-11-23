@@ -22,4 +22,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\EmployeeForm.razor" />
+  </ItemGroup>
 </Project>

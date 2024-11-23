@@ -1,25 +1,49 @@
 ﻿using HRApp.Models;
-using HRApp.Models.Enums;
+using HRApp.Models.Enums.Employee;
 using HRApp.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace HRApp.Data;
 
-public class DataContext(IConfiguration configuration) : DbContext
+public class DataContext : DbContext
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    private readonly IConfiguration _configuration;
+
+    public DataContext(IConfiguration configuration)
     {
-        optionsBuilder.UseSqlite(configuration.GetConnectionString("EmployeeDB"));
+        _configuration = configuration;
     }
 
-    public DbSet<Employees> Employees { get; set; }
-    public DbSet<CalendarEvent> CalendarEvents { get; set; }
-    public DbSet<TimeOffRequest> TimeOffRequests { get; set; }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlite(_configuration.GetConnectionString("EmployeeDB"));
+    }
+
+    public DbSet<Employees> Employees { get; set; } = null!;
+    public DbSet<CalendarEvent> CalendarEvents { get; set; } = null!;
+    public DbSet<TimeOffRequest> TimeOffRequests { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Employee table configuration
         modelBuilder.Entity<Employees>().ToTable("Employee");
+
+        // Configure string to enum conversions
+        modelBuilder.Entity<Employees>()
+            .Property(e => e.Gender)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<Employees>()
+            .Property(e => e.Department)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<Employees>()
+            .Property(e => e.ContractType)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<Employees>()
+            .Property(e => e.BenefitsPackage)
+            .HasConversion<string>();
 
         // Configure CalendarEvent relationships
         modelBuilder.Entity<CalendarEvent>()
@@ -37,6 +61,7 @@ public class DataContext(IConfiguration configuration) : DbContext
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Seed initial data
         var employees = new List<Employees>
         {
             new Employees
@@ -45,24 +70,39 @@ public class DataContext(IConfiguration configuration) : DbContext
                 FirstName = "Admin",
                 LastName = "Account",
                 Email = "admin@hrapp.co.uk",
-                Gender = "None",
-                Department = "Software Engineering",
-                Salary = "£999999.00",
+                Gender = Gender.PreferNotToSay,
+                Department = Department.Engineering,
+                Salary = 99999.99M,
                 JoinDate = new DateTime(2022, 3, 14),
-                EmployeeType = EmployeeType.FullTime,
-                BenefitsPackage = "Executive Benefits Package",
-                ContractType = "Permanent Executive",
+                ContractType = ContractType.Permanent,
+                BenefitsPackage = BenefitsPackage.Executive,
                 WorkingHoursPerWeek = 40,
                 IsOvertimeEligible = false,
-                VacationDaysPerYear = 30
+                VacationDaysPerYear = 30,
+                TimeOffRequests = new List<TimeOffRequest>()
             }
         };
 
-        employees.Add(EmployeeDataHelper.CreateEmployee(1, "Uzair", "Mohammed", "uzairmohammedpc@gmail.com", 
-            "Male", "Software Engineering", "£65000.00", new DateTime(2022, 3, 15)));
+        // Add additional employees
+        employees.Add(EmployeeDataHelper.CreateEmployee(
+            1, 
+            "Uzair", 
+            "Mohammed", 
+            "uzairmohammedpc@gmail.com", 
+            Gender.Male, 
+            Department.Engineering, 
+            65000.00M, 
+            new DateTime(2022, 3, 15)));
             
-        employees.Add(EmployeeDataHelper.CreateEmployee(2, "James", "Wilson", "jwilson@company.com", 
-            "Male", "Software Engineering", "£62000.00", new DateTime(2022, 4, 1)));
+        employees.Add(EmployeeDataHelper.CreateEmployee(
+            2, 
+            "James", 
+            "Wilson", 
+            "jwilson@company.com", 
+            Gender.Male, 
+            Department.Engineering, 
+            62000.00M, 
+            new DateTime(2022, 4, 1)));
 
         modelBuilder.Entity<Employees>().HasData(employees);
     }

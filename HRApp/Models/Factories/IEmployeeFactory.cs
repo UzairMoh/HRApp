@@ -1,62 +1,65 @@
-using HRApp.Models.Enums;
+using HRApp.Models.Enums.Employee;
 
 namespace HRApp.Models.Factories;
 
+/// <summary>
+/// Interface for creating different types of employees.
+/// </summary>
 public interface IEmployeeFactory
 {
     /// <summary>
-    /// Creates an employee of the specified type with the given details
+    /// Creates a base employee with the specified parameters.
     /// </summary>
     Employees CreateEmployee(
-        EmployeeType type,
+        ContractType contractType,
         string firstName,
         string lastName,
         string email,
-        string gender,
-        string department,
-        string salary);
+        Gender gender,
+        Department department,
+        decimal salary);
 
     /// <summary>
-    /// Creates a full-time employee with standard benefits and contract
+    /// Creates a full-time employee with predefined configurations.
     /// </summary>
     Employees CreateFullTimeEmployee(
         string firstName,
         string lastName,
         string email,
-        string gender,
-        string department,
-        string salary);
+        Gender gender,
+        Department department,
+        decimal salary);
 
     /// <summary>
-    /// Creates a part-time employee with adjusted benefits and hours
+    /// Creates a part-time employee with predefined configurations.
     /// </summary>
     Employees CreatePartTimeEmployee(
         string firstName,
         string lastName,
         string email,
-        string gender,
-        string department,
-        string salary);
+        Gender gender,
+        Department department,
+        decimal salary);
 
     /// <summary>
-    /// Creates a contractor with specific contract terms
+    /// Creates a contractor employee with predefined configurations.
     /// </summary>
     Employees CreateContractor(
         string firstName,
         string lastName,
         string email,
-        string gender,
-        string department,
-        string salary);
+        Gender gender,
+        Department department,
+        decimal salary);
 
     /// <summary>
-    /// Creates an intern with learning objectives and fixed term
+    /// Creates an intern employee with predefined configurations.
     /// </summary>
     Employees CreateIntern(
         string firstName,
         string lastName,
         string email,
-        string gender,
-        string department,
-        string salary);
+        Gender gender,
+        Department department,
+        decimal salary);
 }

@@ -1,7 +1,7 @@
-﻿using HRApp.Models;
-using HRApp.Models.Enums;
+﻿using HRApp.Models.Enums.Employee;
 using HRApp.Services.Employee;
 using Microsoft.AspNetCore.Components;
+using System.ComponentModel.DataAnnotations;
 
 namespace HRApp.Pages.AdminView;
 
@@ -11,31 +11,36 @@ public partial class Employees
 
     private bool ShowCreate { get; set; }
     private bool ShowEdit { get; set; }
-    public int EditingId { get; set; }
+    private int EditingId { get; set; }
 
     // Form fields for new employee
     private string FirstName { get; set; } = string.Empty;
     private string LastName { get; set; } = string.Empty;
     private string Email { get; set; } = string.Empty;
-    private string Gender { get; set; } = string.Empty;
-    private string Department { get; set; } = string.Empty;
-    private string Salary { get; set; } = string.Empty;
-    private EmployeeType EmployeeType { get; set; }
+    private Gender Gender { get; set; } = Gender.PreferNotToSay;
+    private Department Department { get; set; } = Department.Engineering;
+    private decimal Salary { get; set; }
+    private ContractType ContractType { get; set; } = ContractType.Permanent;
 
     // Properties for editing
     private string EditFirstName { get; set; } = string.Empty;
     private string EditLastName { get; set; } = string.Empty;
     private string EditEmail { get; set; } = string.Empty;
-    private string EditGender { get; set; } = string.Empty;
-    private string EditDepartment { get; set; } = string.Empty;
-    private string EditSalary { get; set; } = string.Empty;
-    private EmployeeType EditEmployeeType { get; set; }
+    private Gender EditGender { get; set; }
+    private Department EditDepartment { get; set; }
+    private decimal EditSalary { get; set; }
+    private ContractType EditContractType { get; set; }
 
     private List<Models.Employees>? OurEmployees { get; set; }
+    private string ErrorMessage { get; set; } = string.Empty;
 
-    private string _searchTerm = string.Empty;
-    private string _selectedDepartment = string.Empty;
-    private string _selectedGender = string.Empty;
+    // Filter properties
+    private string SearchTerm { get; set; } = string.Empty;
+    private Department? SelectedDepartment { get; set; }
+    private Gender? SelectedGender { get; set; }
+    private ContractType? SelectedContractType { get; set; }
+    private decimal? MinSalary { get; set; }
+    private decimal? MaxSalary { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,120 +49,192 @@ public partial class Employees
         await LoadEmployeesAsync();
     }
 
-    public void ShowCreateForm()
+    private void ShowCreateForm()
     {
         ShowCreate = true;
-        // Reset form fields
-        FirstName = string.Empty;
-        LastName = string.Empty;
-        Email = string.Empty;
-        Gender = string.Empty;
-        Department = string.Empty;
-        Salary = string.Empty;
-        EmployeeType = EmployeeType.FullTime; // Default value
+        ResetCreateForm();
     }
 
-    public async Task CreateNewEmployeeAsync()
+    private async Task CreateNewEmployeeAsync()
     {
-        await EmployeeService!.CreateEmployeeAsync(
-            FirstName,
-            LastName,
-            Email,
-            Gender,
-            Department,
-            Salary,
-            EmployeeType
-        );
-        
-        await LoadEmployeesAsync();
-        ShowCreate = false;
+        try
+        {
+            await EmployeeService!.CreateEmployeeAsync(
+                FirstName,
+                LastName,
+                Email,
+                Gender,
+                Department,
+                Salary,
+                ContractType
+            );
+            
+            await LoadEmployeesAsync();
+            ShowCreate = false;
+            ErrorMessage = string.Empty;
+        }
+        catch (ValidationException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "An error occurred while creating the employee.";
+            Console.WriteLine(ex);
+        }
     }
 
     private async Task LoadEmployeesAsync()
     {
-        OurEmployees = await EmployeeService!.GetEmployeesAsync();
+        try
+        {
+            OurEmployees = await EmployeeService!.GetEmployeesAsync();
+            ErrorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Failed to load employees.";
+            Console.WriteLine(ex);
+        }
     }
 
-    public async Task ShowEditFormAsync(Models.Employees employee)
+    private async Task ShowEditFormAsync(Models.Employees employee)
     {
         var employeeToEdit = await EmployeeService!.GetEmployeeAsync(employee.Id);
         if (employeeToEdit is not null)
         {
-            // Populate edit fields
-            EditFirstName = employeeToEdit.FirstName ?? string.Empty;
-            EditLastName = employeeToEdit.LastName ?? string.Empty;
-            EditEmail = employeeToEdit.Email ?? string.Empty;
-            EditGender = employeeToEdit.Gender ?? string.Empty;
-            EditDepartment = employeeToEdit.Department ?? string.Empty;
-            EditSalary = employeeToEdit.Salary ?? string.Empty;
-            EditEmployeeType = employeeToEdit.EmployeeType;
-            
+            PopulateEditForm(employeeToEdit);
             ShowEdit = true;
             EditingId = employee.Id;
+            ErrorMessage = string.Empty;
         }
     }
 
-    public async Task UpdateEmployeeAsync()
+    private async Task UpdateEmployeeAsync()
     {
-        await EmployeeService!.UpdateEmployeeAsync(
-            EditingId,
-            EditFirstName,
-            EditLastName,
-            EditEmail,
-            EditGender,
-            EditDepartment,
-            EditSalary,
-            EditEmployeeType
-        );
-        
-        await LoadEmployeesAsync();
-        ShowEdit = false;
+        try
+        {
+            await EmployeeService!.UpdateEmployeeAsync(
+                EditingId,
+                EditFirstName,
+                EditLastName,
+                EditEmail,
+                EditGender,
+                EditDepartment,
+                EditSalary,
+                EditContractType
+            );
+            
+            await LoadEmployeesAsync();
+            ShowEdit = false;
+            ErrorMessage = string.Empty;
+        }
+        catch (ValidationException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        catch (KeyNotFoundException)
+        {
+            ErrorMessage = "Employee not found.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "An error occurred while updating the employee.";
+            Console.WriteLine(ex);
+        }
     }
 
-    public async Task DeleteEmployeeAsync(Models.Employees employee)
+    private async Task DeleteEmployeeAsync(Models.Employees employee)
     {
-        await EmployeeService!.DeleteEmployeeAsync(employee.Id);
-        await LoadEmployeesAsync();
+        try
+        {
+            await EmployeeService!.DeleteEmployeeAsync(employee.Id);
+            await LoadEmployeesAsync();
+            ErrorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Failed to delete employee.";
+            Console.WriteLine(ex);
+        }
     }
 
     private List<Models.Employees> FilteredEmployees => OurEmployees?
-        .Where(e => (string.IsNullOrEmpty(_searchTerm) || 
-                    $"{e.FirstName} {e.LastName}".Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)) &&
-                    (string.IsNullOrEmpty(_selectedDepartment) || e.Department == _selectedDepartment) &&
-                    (string.IsNullOrEmpty(_selectedGender) || e.Gender == _selectedGender))
+        .Where(e => FilterEmployee(e))
+        .OrderBy(e => e.Department)
+        .ThenBy(e => e.LastName)
         .ToList() ?? new List<Models.Employees>();
 
-    private void FilterEmployees(string term)
-    {
-        _searchTerm = term;
-    }
+    private bool FilterEmployee(Models.Employees e) =>
+        (string.IsNullOrEmpty(SearchTerm) || 
+         $"{e.FirstName} {e.LastName} {e.Email}".Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)) &&
+        (!SelectedDepartment.HasValue || e.Department == SelectedDepartment) &&
+        (!SelectedGender.HasValue || e.Gender == SelectedGender) &&
+        (!SelectedContractType.HasValue || e.ContractType == SelectedContractType) &&
+        (!MinSalary.HasValue || e.Salary >= MinSalary) &&
+        (!MaxSalary.HasValue || e.Salary <= MaxSalary);
 
-    private void FilterByDepartment(string department)
+    private void ResetFilters()
     {
-        _selectedDepartment = department;
-    }
-
-    private void FilterByGender(string gender)
-    {
-        _selectedGender = gender;
+        SearchTerm = string.Empty;
+        SelectedDepartment = null;
+        SelectedGender = null;
+        SelectedContractType = null;
+        MinSalary = null;
+        MaxSalary = null;
     }
 
     private void CancelEdit()
     {
         ShowEdit = false;
-        // Reset edit fields
+        ResetEditForm();
+        ErrorMessage = string.Empty;
+    }
+
+    private void ResetCreateForm()
+    {
+        FirstName = string.Empty;
+        LastName = string.Empty;
+        Email = string.Empty;
+        Gender = Gender.PreferNotToSay;
+        Department = Department.Engineering;
+        Salary = 0;
+        ContractType = ContractType.Permanent;
+        ErrorMessage = string.Empty;
+    }
+
+    private void ResetEditForm()
+    {
         EditFirstName = string.Empty;
         EditLastName = string.Empty;
         EditEmail = string.Empty;
-        EditGender = string.Empty;
-        EditDepartment = string.Empty;
-        EditSalary = string.Empty;
-        EditEmployeeType = EmployeeType.FullTime;
+        EditGender = Gender.PreferNotToSay;
+        EditDepartment = Department.Engineering;
+        EditSalary = 0;
+        EditContractType = ContractType.Permanent;
     }
 
-    // Helper method to get employee type names for dropdown
-    private IEnumerable<EmployeeType> GetEmployeeTypes()
+    private void PopulateEditForm(Models.Employees employee)
     {
-        return Enum.GetValues<EmployeeType>();
+        EditFirstName = employee.FirstName;
+        EditLastName = employee.LastName;
+        EditEmail = employee.Email;
+        EditGender = employee.Gender;
+        EditDepartment = employee.Department;
+        EditSalary = employee.Salary;
+        EditContractType = employee.ContractType;
     }
+
+    // Helper methods for dropdowns
+    private static IEnumerable<Gender> GetGenderOptions() => 
+        Enum.GetValues<Gender>();
+
+    private static IEnumerable<Department> GetDepartmentOptions() => 
+        Enum.GetValues<Department>();
+
+    private static IEnumerable<ContractType> GetContractTypeOptions() => 
+        Enum.GetValues<ContractType>();
+
+    private static string FormatSalary(decimal salary) => 
+        $"£{salary:N2}";
 }

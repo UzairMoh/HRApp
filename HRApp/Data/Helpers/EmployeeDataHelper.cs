@@ -1,6 +1,5 @@
-// Data/Helpers/EmployeeDataHelper.cs
 using HRApp.Models;
-using HRApp.Models.Enums;
+using HRApp.Models.Enums.Employee;
 
 namespace HRApp.Data.Helpers;
 
@@ -8,64 +7,67 @@ public static class EmployeeDataHelper
 {
     private static readonly Random Random = new(123);
 
-    public static (EmployeeType type, string benefits, string contract, int hours, bool overtime, int vacation) 
-        GetEmployeeDetails(string department, string salary)
+    public static (ContractType contractType, BenefitsPackage benefits, int hours, bool overtime, int vacation) 
+        GetEmployeeDetails(Department department, decimal salary)
     {
-        var salaryNum = decimal.Parse(salary.Replace("£", "").Replace(",", ""));
         var typeRoll = Random.NextDouble();
             
-        var employeeType = department switch
+        var contractType = department switch
         {
-            "Software Engineering" when salaryNum > 60000 => EmployeeType.FullTime,
-            "Product Management" when salaryNum > 60000 => EmployeeType.FullTime,
-            _ when typeRoll < 0.7 => EmployeeType.FullTime,
-            _ when typeRoll < 0.85 => EmployeeType.PartTime,
-            _ when typeRoll < 0.95 => EmployeeType.Contractor,
-            _ => EmployeeType.Intern
+            Department.Engineering when salary > 60000 => ContractType.Permanent,
+            Department.ProductManagement when salary > 60000 => ContractType.Permanent,
+            _ when typeRoll < 0.7 => ContractType.Permanent,
+            _ when typeRoll < 0.85 => ContractType.FixedTerm,
+            _ when typeRoll < 0.95 => ContractType.Temporary,
+            _ => ContractType.Apprenticeship
         };
 
-        return employeeType switch
+        return contractType switch
         {
-            EmployeeType.FullTime => (
-                EmployeeType.FullTime,
-                "Full Benefits Package",
-                "Permanent",
+            ContractType.Permanent => (
+                ContractType.Permanent,
+                BenefitsPackage.Standard,
                 40,
                 true,
                 25 + Random.Next(0, 6) // 25-30 days
             ),
-            EmployeeType.PartTime => (
-                EmployeeType.PartTime,
-                "Basic Benefits",
-                "Part-Time",
+            ContractType.FixedTerm => (
+                ContractType.FixedTerm,
+                BenefitsPackage.PartTime,
                 20 + Random.Next(0, 11), // 20-30 hours
                 true,
                 12 + Random.Next(0, 4) // 12-15 days
             ),
-            EmployeeType.Contractor => (
-                EmployeeType.Contractor,
-                "No Benefits",
-                "Fixed-Term Contract",
+            ContractType.Temporary => (
+                ContractType.Temporary,
+                BenefitsPackage.Contractor,
                 40,
                 false,
                 0
             ),
-            EmployeeType.Intern => (
-                EmployeeType.Intern,
-                "Basic Benefits",
-                "Internship",
+            ContractType.Apprenticeship => (
+                ContractType.Apprenticeship,
+                BenefitsPackage.Intern,
                 40,
                 false,
                 10
             ),
-            _ => throw new ArgumentException("Invalid employee type")
+            _ => throw new ArgumentException("Invalid contract type")
         };
     }
 
-    public static Employees CreateEmployee(int id, string firstName, string lastName, string email, 
-        string gender, string department, string salary, DateTime joinDate, DateTime? leaveDate = null)
+    public static Employees CreateEmployee(
+        int id, 
+        string firstName, 
+        string lastName, 
+        string email, 
+        Gender gender, 
+        Department department, 
+        decimal salary, 
+        DateTime joinDate, 
+        DateTime? leaveDate = null)
     {
-        var (type, benefits, contract, hours, overtime, vacation) = 
+        var (contractType, benefits, hours, overtime, vacation) = 
             GetEmployeeDetails(department, salary);
 
         return new Employees
@@ -79,12 +81,12 @@ public static class EmployeeDataHelper
             Salary = salary,
             JoinDate = joinDate,
             LeaveDate = leaveDate,
-            EmployeeType = type,
+            ContractType = contractType,
             BenefitsPackage = benefits,
-            ContractType = contract,
             WorkingHoursPerWeek = hours,
             IsOvertimeEligible = overtime,
-            VacationDaysPerYear = vacation
+            VacationDaysPerYear = vacation,
+            TimeOffRequests = new List<TimeOffRequest>()
         };
     }
 }

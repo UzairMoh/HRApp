@@ -1,4 +1,5 @@
 using HRApp.Models;
+using HRApp.Models.Enums.Employee;
 using HRApp.Services.Employee;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -29,11 +30,13 @@ public partial class AdminDashboard : ComponentBase
         var employees = await EmployeeService.GetEmployeesAsync();
 
         TotalEmployees = employees.Count;
-        TotalMaleEmployees = employees.Count(e => e.Gender == "Male");
-        TotalFemaleEmployees = employees.Count(e => e.Gender == "Female");
+        TotalMaleEmployees = employees.Count(e => e.Gender == Gender.Male);
+        TotalFemaleEmployees = employees.Count(e => e.Gender == Gender.Female);
         EmployeesByDepartment = employees
             .GroupBy(e => e.Department)
-            .ToDictionary(g => g.Key!, g => g.Count());
+            .ToDictionary(
+                g => g.Key.ToString(), // Convert Department enum to string for the dictionary
+                g => g.Count());
 
         var currentYear = DateTime.Now.Year;
         MonthlyJoins = employees
