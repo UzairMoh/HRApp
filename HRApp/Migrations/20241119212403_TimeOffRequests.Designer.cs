@@ -3,6 +3,7 @@ using System;
 using HRApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class EmployeeDataContextModelSnapshot : ModelSnapshot
+    [Migration("20241119212403_TimeOffRequests")]
+    partial class TimeOffRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -116,11 +119,11 @@ namespace HRApp.Migrations
                         {
                             Id = 1,
                             Department = "Software Engineering",
-                            Email = "uzairmohammedpc@gmail.com",
-                            FirstName = "Uzair",
-                            Gender = "Male",
+                            Email = "schen@company.com",
+                            FirstName = "Sarah",
+                            Gender = "Female",
                             JoinDate = new DateTime(2022, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Mohammed",
+                            LastName = "Chen",
                             Salary = "£65000.00"
                         },
                         new

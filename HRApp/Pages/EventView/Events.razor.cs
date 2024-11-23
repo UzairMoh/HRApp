@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 using Radzen.Blazor;
 
-namespace HRApp.Pages.CalendarView;
+namespace HRApp.Pages.EventView;
 
-public partial class Calendar
+public partial class Events
 {
     [Inject] private DialogService DialogService { get; set; } = default!;
     [Inject] private ICalendarEventService CalendarEventService { get; set; } = default!;
@@ -200,7 +200,7 @@ public partial class Calendar
 
     private async Task<CalendarEvent?> OpenEventDialog(string title, CalendarEvent calendarEvent)
     {
-        return await DialogService.OpenAsync<EditCalendarEvent>(title, 
+        return await DialogService.OpenAsync<EditEvent>(title, 
             new Dictionary<string, object> { { "CalendarEvent", calendarEvent } });
     }
 

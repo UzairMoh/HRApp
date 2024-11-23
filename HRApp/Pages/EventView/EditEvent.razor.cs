@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 
-namespace HRApp.Pages.CalendarView;
+namespace HRApp.Pages.EventView;
 
-public partial class EditCalendarEvent
+public partial class EditEvent
 {
     [Parameter]
     public CalendarEvent CalendarEvent { get; set; } = new();

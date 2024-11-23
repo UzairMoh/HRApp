@@ -46,8 +46,8 @@ public class DataContext(IConfiguration configuration) : DbContext
             },
             new Employees
             {
-                Id = 1, FirstName = "Sarah", LastName = "Chen", Email = "schen@company.com",
-                Gender = "Female", Department = "Software Engineering", Salary = "£65000.00",
+                Id = 1, FirstName = "Uzair", LastName = "Mohammed", Email = "uzairmohammedpc@gmail.com",
+                Gender = "Male", Department = "Software Engineering", Salary = "£65000.00",
                 JoinDate = new DateTime(2022, 3, 15)
             },
             new Employees
