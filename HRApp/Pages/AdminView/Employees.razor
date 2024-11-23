@@ -5,120 +5,209 @@
 
 <div class="dashboard-container">
     <div class="dashboard-header">
-        <button class="btn btn-primary" @onclick="ShowCreateForm">Add a New Employee</button>
-
-        <div class="search-container">
-            <input class="search-input" type="text" placeholder="Search by name..." @oninput="(e) => FilterEmployees(e.Value!.ToString()!)">
+        <div class="header-title">
+            <h1>Employee Management</h1>
+            <button class="btn btn-primary" @onclick="ShowCreateForm">
+                <i class="fas fa-plus"></i> Add Employee
+            </button>
         </div>
 
-        <div class="filter-group">
-            <select class="filter-select" @onchange="(e) => FilterByDepartment(e.Value!.ToString()!)">
-                <option value="">All Departments</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Accounting">Accounting</option>
-                <option value="Product Management">Product Management</option>
-                <option value="Services">Services</option>
-                <option value="Human Resources">Human Resources</option>
-                <option value="Legal">Legal</option>
-                <option value="Research and Development">Research and Development</option>
-                <option value="Training">Training</option>
-                <option value="Support">Support</option>
-            </select>
+        <div class="filters-section">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                    class="search-input"
+                    type="text"
+                    placeholder="Search employees..."
+                    @oninput="(e) => FilterEmployees(e.Value!.ToString()!)"
+                >
+            </div>
 
-            <select class="filter-select" @onchange="(e) => FilterByGender(e.Value!.ToString()!)">
-                <option value="">All Genders</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
+            <div class="filter-group">
+                <select class="filter-select" @onchange="(e) => FilterByDepartment(e.Value!.ToString()!)">
+                    <option value="">All Departments</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Accounting">Accounting</option>
+                    <option value="Product Management">Product Management</option>
+                    <option value="Human Resources">Human Resources</option>
+                    <option value="Legal">Legal</option>
+                </select>
+
+                <select class="filter-select" @onchange="(e) => FilterByGender(e.Value!.ToString()!)">
+                    <option value="">All Genders</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
         </div>
     </div>
 
     @if (ShowCreate)
     {
-    <div class="employee-form">
-        <div class="form-group">
-            <label for="FirstName">First Name</label>
-            <input class="form-input" id="FirstName" name="FirstName" type="text" @bind="@NewEmployee!.FirstName">
+        <div class="card">
+            <div class="card-header">
+                <h2>New Employee</h2>
+            </div>
+            <div class="card-body">
+                <EditForm Model="@this" OnValidSubmit="@CreateNewEmployeeAsync">
+                    <DataAnnotationsValidator />
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <InputText id="firstName" @bind-Value="FirstName" class="form-input" />
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <InputText id="lastName" @bind-Value="LastName" class="form-input" />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <InputText id="email" @bind-Value="Email" class="form-input" />
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <InputSelect id="gender" @bind-Value="Gender" class="form-input">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <InputSelect id="department" @bind-Value="Department" class="form-input">
+                                <option value="">Select Department</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Accounting">Accounting</option>
+                                <option value="Product Management">Product Management</option>
+                                <option value="Human Resources">Human Resources</option>
+                                <option value="Legal">Legal</option>
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeType">Employee Type</label>
+                            <InputSelect id="employeeType" @bind-Value="EmployeeType" class="form-input">
+                                @foreach (var type in GetEmployeeTypes())
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label for="salary">Salary</label>
+                            <InputText id="salary" @bind-Value="Salary" class="form-input" />
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" @onclick="() => ShowCreate = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Employee</button>
+                    </div>
+                </EditForm>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="LastName">Last Name</label>
-            <input class="form-input" id="LastName" name="LastName" type="text" @bind="@NewEmployee.LastName">
-        </div>
-        <div class="form-group">
-            <label for="Email">Email Address</label>
-            <input class="form-input" id="Email" name="Email" type="text" @bind="@NewEmployee.Email">
-        </div>
-        <div class="form-group">
-            <label for="Gender">Gender</label>
-            <input class="form-input" id="Gender" name="Gender" type="text" @bind="@NewEmployee.Gender">
-        </div>
-        <div class="form-group">
-            <label for="Department">Department</label>
-            <input class="form-input" id="Department" name="Department" type="text" @bind="@NewEmployee.Department">
-        </div>
-        <div class="form-group">
-            <label for="Salary">Salary</label>
-            <input class="form-input" id="Salary" name="Salary" type="text" @bind="@NewEmployee.Salary">
-        </div>
-        <div class="form-group">
-            <button class="btn btn-success" @onclick="CreateNewEmployeeAsync">Submit</button>
-        </div>
-    </div>
     }
-    else
-    {
+
     @if (FilteredEmployees.Count > 0)
     {
-    <div class="employee-grid">
-        <div class="grid-header">
-            <span class="grid-cell">Name</span>
-            <span class="grid-cell">Email</span>
-            <span class="grid-cell">Department</span>
-            <span class="grid-cell">Gender</span>
-            <span class="grid-cell">Salary</span>
-            <span class="grid-cell">Actions</span>
+        <div class="employee-cards">
+            @foreach (var employee in FilteredEmployees)
+            {
+                <div class="employee-card @(ShowEdit && EditingId == employee.Id ? "editing" : "")">
+                    @if (ShowEdit && EditingId == employee.Id)
+                    {
+                        <div class="card-edit-form">
+                            <h3>Edit Employee</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <InputText @bind-Value="EditFirstName" class="form-input" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <InputText @bind-Value="EditLastName" class="form-input" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <InputText @bind-Value="EditEmail" class="form-input" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Employee Type</label>
+                                    <InputSelect @bind-Value="EditEmployeeType" class="form-input">
+                                        @foreach (var type in GetEmployeeTypes())
+                                        {
+                                            <option value="@type">@type</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <InputSelect @bind-Value="EditDepartment" class="form-input">
+                                        <option value="Engineering">Engineering</option>
+                                        <option value="Accounting">Accounting</option>
+                                        <option value="Product Management">Product Management</option>
+                                        <option value="Human Resources">Human Resources</option>
+                                        <option value="Legal">Legal</option>
+                                    </InputSelect>
+                                </div>
+                                <div class="form-group">
+                                    <label>Salary</label>
+                                    <InputText @bind-Value="EditSalary" class="form-input" />
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+                                <button class="btn btn-primary" @onclick="UpdateEmployeeAsync">Save Changes</button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card-header">
+                            <div class="employee-name">@employee.FirstName @employee.LastName</div>
+                            <div class="employee-type">@employee.EmployeeType</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="label">Email</span>
+                                    <span class="value">@employee.Email</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Department</span>
+                                    <span class="value">@employee.Department</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Contract Type</span>
+                                    <span class="value">@employee.ContractType</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Benefits</span>
+                                    <span class="value">@employee.BenefitsPackage</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Working Hours</span>
+                                    <span class="value">@employee.WorkingHoursPerWeek hrs/week</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Salary</span>
+                                    <span class="value">@employee.Salary</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary" @onclick="() => ShowEditFormAsync(employee)">Edit</button>
+                            <button class="btn btn-danger" @onclick="() => DeleteEmployeeAsync(employee)">Delete</button>
+                        </div>
+                    }
+                </div>
+            }
         </div>
-
-        @foreach (var employee in FilteredEmployees)
-        {
-        @if (ShowEdit && EditingId == employee.Id)
-        {
-        <div class="grid-row edit-row">
-            <input class="edit-input" type="text" @bind="@EmployeeToUpdate!.FirstName" placeholder="First Name"/>
-            <input class="edit-input" type="text" @bind="@EmployeeToUpdate.LastName" placeholder="Last Name"/>
-            <input class="edit-input" type="email" @bind="@EmployeeToUpdate.Email" placeholder="Email"/>
-            <input class="edit-input" type="text" @bind="@EmployeeToUpdate.Department" placeholder="Department"/>
-            <input class="edit-input" type="text" @bind="@EmployeeToUpdate.Gender" placeholder="Gender"/>
-            <input class="edit-input" type="text" @bind="@EmployeeToUpdate.Salary" placeholder="Salary"/>
-
-            <div class="action-group">
-                <button class="btn btn-success" @onclick="UpdateEmployeeAsync">Save</button>
-                <button class="btn btn-warning" @onclick="CancelEdit">Cancel</button>
-            </div>
-        </div>
-        }
-        else
-        {
-        <div class="grid-row">
-            <span class="grid-cell">@employee.FirstName @employee.LastName</span>
-            <span class="grid-cell">@employee.Email</span>
-            <span class="grid-cell">@employee.Department</span>
-            <span class="grid-cell">@employee.Gender</span>
-            <span class="grid-cell">@employee.Salary</span>
-            <div class="action-group">
-                <button class="btn btn-warning" @onclick="() => ShowEditFormAsync(employee)">Edit</button>
-                <button class="btn btn-danger" @onclick="() => DeleteEmployeeAsync(employee)">Delete</button>
-            </div>
-        </div>
-        }
-        }
-    </div>
     }
     else
     {
-    <div class="empty-state">
-        <p>No employees found.</p>
-    </div>
-    }
+        <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>No employees found</p>
+            <button class="btn btn-primary" @onclick="ShowCreateForm">Add Your First Employee</button>
+        </div>
     }
 </div>

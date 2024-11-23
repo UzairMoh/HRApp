@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Auth0.AspNetCore.Authentication;
 using HRApp.Data;
 using HRApp.Models;
+using HRApp.Models.Factories;
 using HRApp.Repositories.Calendar;
 using HRApp.Repositories.Employee;
 using HRApp.Repositories.Leave;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
 // Add your application services
+builder.Services.AddScoped<IEmployeeFactory, EmployeeFactory>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();

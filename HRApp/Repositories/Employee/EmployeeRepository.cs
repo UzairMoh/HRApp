@@ -23,7 +23,7 @@ public class EmployeeRepository : IEmployeeRepository
         return await _context.Employees.FindAsync(id);
     }
 
-    public async Task AddEmployeeAsync(Employees employee)
+    public async Task CreateEmployeeAsync(Employees employee)
     {
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
